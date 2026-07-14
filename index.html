@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Tracking - PT. Natus Vincere Medika</title>
+<style>
+body { font-family: 'Poppins', sans-serif; background:#E8F5E9; padding:15px; }
+.container { max-width:1200px; margin:auto; background:white; padding:20px; border-radius:12px; }
+h1 { color:#00A651; text-align:center; }
+.logo { text-align:center; font-size:20px; font-weight:bold; color:#00A651; }
+.tabs { display:flex; gap:10px; margin:20px 0; flex-wrap:wrap; }
+.tab { padding:10px 15px; background:#00A651; color:white; border:none; border-radius:8px; cursor:pointer; }
+.tab.active { background:#007a3d; }
+.form { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-bottom:20px; align-items: end; }
+input, select, button { padding:10px; border:1px solid #ccc; border-radius:8px; }
+button { background:#00A651; color:white; border:none; cursor:pointer; }
+button:hover { background:#007a3d; }
+table { width:100%; border-collapse:collapse; font-size:14px; margin-top: 10px; }
+th, td { border:1px solid #ddd; padding:8px; text-align:left; }
+th { background:#00A651; color:white; }
+.summary { display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; margin:20px 0; }
+.card { padding:15px; border-radius:10px; color:white; text-align:center; }
+.in { background:#4CAF50; } .out { background:#F44336; } .piutang { background:#FF9800; }
+.lunas { color:green; font-weight:bold; } .belum { color:red; font-weight:bold; }
+
+/* Style tambahan */
+.checkbox-group { border: 1px solid #ccc; border-radius: 8px; padding: 10px; max-height: 120px; overflow-y: auto; background: #fff; font-size: 13px; }
+.checkbox-group label { display: block; margin-bottom: 5px; cursor: pointer; }
+.checkbox-group input { margin-right: 8px; padding: 0; }
+.small-text { font-size: 12px; color: #555; font-weight: bold; display: block; margin-bottom: 4px; }
+.btn-view { background: #2196F3; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 11px; }
+.btn-view:hover { background: #0b7dda; }
+.btn-del { background: #f44336; padding: 6px 10px; }
+.btn-del:hover { background: #da190b; }
+.select-status { padding: 4px; border-radius: 4px; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="logo">PT. NATUS VINCERE MEDIKA</div>
+<h1>📊 Sistem Tracking Keuangan & Penagihan</h1>
+
+<div class="summary">
+  <div class="card in"><h3>Pemasukan Bulan Ini</h3><p id="totalIn">Rp 0</p></div>
+  <div class="card out"><h3>Pengeluaran Bulan Ini</h3><p id="totalOut">Rp 0</p></div>
+  <div class="card piutang"><h3>Total Piutang</h3><p id="totalPiutang">Rp 0</p></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('mcu')">1. Data MCU</button>
+  <button class="tab" onclick="showTab('penagihan')">2. Penagihan Corporate</button>
+  <button class="tab" onclick="showTab('keuangan')">3. Keuangan</button>
+  <button class="tab" onclick="showTab('pengeluaran-project')">4. Pengeluaran per-Project</button>
+</div>
+
+<!-- TAB MCU (TAB 1) -->
+<div id="mcu" class="tab-content">
+  <h3>Data Pasien MCU Corporate</h3>
+  <div class="form" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+    <div><label class="small-text">Nama Client</label><input type="text" id="perusahaan" placeholder="Nama Client" style="width:100%; box-sizing:border-box;"></div>
+    <div><label class="small-text">Nama / Lokasi Project</label><input type="text" id="lokasiProject" placeholder="Nama/Lokasi Project" style="width:100%; box-sizing:border-box;"></div>
+    <div><label class="small-text">Tgl. Mulai MCU</label><input type="date" id="tglMCU" style="width:100%; box-sizing:border-box;"></div>
+    
+    <div>
+      <label class="small-text">Item Pemeriksaan</label>
+      <div class="checkbox-group" id="itemPemeriksaan">
+        <label><input type="checkbox" value="Rontgen"> Rontgen</label>
+        <label><input type="checkbox" value="USG Abdomen"> USG Abdomen</label>
+        <label><input type="checkbox" value="USG Mammae"> USG Mammae</label>
+        <label><input type="checkbox" value="EKG"> EKG</label>
+        <label><input type="checkbox" value="Treadmill Test"> Treadmill Test</label>
+        <label><input type="checkbox" value="Spirometri"> Spirometri</label>
+        <label><input type="checkbox" value="Audiometri"> Audiometri</label>
+        <label><input type="checkbox" value="Autorefrak"> Autorefrak</label>
+        <label><input type="checkbox" value="Fisik Dokter"> Fisik Dokter</label>
+        <label><input type="checkbox" value="Laboratorium"> Laboratorium</label>
+      </div>
+    </div>
+    
+    <div><label class="small-text">Harga per Pasien (Rp)</label><input type="number" id="hargaProject" placeholder="Harga/Pasien" style="width:100%; box-sizing:border-box;"></div>
+    <div><label class="small-text">Jumlah Pasien</label><input type="number" id="jmlPasien" placeholder="Jumlah Pasien" style="width:100%; box-sizing:border-box;"></div>
+    <button onclick="addMCU()">+ Simpan</button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Nama Client</th>
+        <th>Nama/Lokasi Project</th>
+        <th>Tgl. Mulai MCU</th>
+        <th>Item Pemeriksaan</th>
+        <th>Harga/Pasien</th>
+        <th>Jumlah Pasien</th>
+        <th>Total Harga</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="listMCU"></tbody>
+  </table>
+</div>
+
+<!-- TAB PENAGIHAN (TAB 2) -->
+<div id="penagihan" class="tab-content" style="display:none">
+  <h3>Tracking Penagihan Corporate</h3>
+  <div class="form" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+    <div>
+      <label class="small-text">Pilih Client MCU (Kolom 1)</label>
+      <select id="selectMcuClient" style="width:100%;">
+        <option value="">-- Pilih Client MCU --</option>
+      </select>
+    </div>
+    <div><label class="small-text">No. Invoice (Kolom 2)</label><input type="text" id="noInvoice" placeholder="No. Invoice" style="width:100%; box-sizing:border-box;"></div>
+    <div><label class="small-text">Tgl. Kirim Invoice (Kolom 3)</label><input type="date" id="tglKirimInvoice" style="width:100%; box-sizing:border-box;"></div>
+    <div><label class="small-text">Upload Lampiran (Kolom 3)</label><input type="file" id="lampiranInvoice" accept="image/*,application/pdf" style="width:100%; box-sizing:border-box;"></div>
+    <div>
+      <label class="small-text">Durasi (Kolom 4)</label>
+      <select id="durasiInvoice" style="width:100%;">
+        <option value="14">14 Hari</option>
+        <option value="30">30 Hari</option>
+        <option value="45">45 Hari</option>
+        <option value="60">60 Hari</option>
+      </select>
+    </div>
+    <button onclick="addTagihan()">+ Simpan</button>
+  </div>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Nama Perusahaan / Client</th>
+        <th>No. Invoice</th>
+        <th>Tgl Kirim & Lampiran</th>
+        <th>Durasi</th>
+        <th>Total Harga MCU</th>
+        <th>Tgl Jatuh Tempo</th>
+        <th>Status</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="listTagihan"></tbody>
+  </table>
+</div>
+
+<!-- TAB KEUANGAN (TAB 3) -->
+<div id="keuangan" class="tab-content" style="display:none">
+  <h3>Input Pemasukan / Pengeluaran</h3>
+  <div class="form">
+    <div><label class="small-text">Tanggal</label><input type="date" id="tgl" style="width:100%; box-sizing:border-box;"></div>
+    <div><label class="small-text">Jenis</label><select id="jenis" style="width:100%;"><option value="in">Pemasukan</option><option value="out">Pengeluaran</option></select></div>
+    <div>
+      <label class="small-text">Nama Project</label>
+      <select id="projectKeuangan" style="width:100%;">
+        <option value="">-- Pilih Project MCU --</option>
+      </select>
+    </div>
+    <div><label class="small-text">Keterangan / Penjelasan</label><input type="text" id="ket" placeholder="Beli Reagen / Operasional" style="width:100%; box-sizing:border-box;"></div>
+    <div><label class="small-text">Jumlah (Rp)</label><input type="number" id="jumlah" placeholder="Jumlah Rp" style="width:100%; box-sizing:border-box;"></div>
+    <button onclick="addKeuangan()">+ Simpan</button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Tanggal</th>
+        <th>Jenis</th>
+        <th>Nama Project</th>
+        <th>Keterangan / Penjelasan</th>
+        <th>Jumlah</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="listKeuangan"></tbody>
+  </table>
+</div>
+
+<!-- TAB PENGELUARAN PER-PROJECT (TAB 4) -->
+<div id="pengeluaran-project" class="tab-content" style="display:none">
+  <h3>Rangkuman Pengeluaran per-Project</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama Client / Perusahaan</th>
+        <th>Nama / Lokasi Project</th>
+        <th>Total Pengeluaran (Rp)</th>
+      </tr>
+    </thead>
+    <tbody id="listPengeluaranProject"></tbody>
+  </table>
+</div>
+
+</div>
+<script>
+// Penamaan database lokal terpisah khusus PT. Natus Vincere Medika (menggunakan prefix nvm_)
+let keuangan = JSON.parse(localStorage.getItem('nvm_keuangan')) || [];
+let mcu = JSON.parse(localStorage.getItem('nvm_mcu')) || [];
+let tagihan = JSON.parse(localStorage.getItem('nvm_tagihan')) || [];
+
+function showTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(e=>e.style.display='none');
+  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+  document.getElementById(tab).style.display='block';
+  if(event) event.target.classList.add('active');
+  
+  populateMcuDropdowns();
+  
+  if (tab === 'pengeluaran-project') {
+    renderPengeluaranProject();
+  }
+}
+
+function populateMcuDropdowns() {
+  let selectTagihan = document.getElementById('selectMcuClient');
+  let selectKeuangan = document.getElementById('projectKeuangan');
+  
+  let optionsHTML = '<option value="">-- Pilih Client MCU --</option>';
+  mcu.forEach((e, i) => {
+    let total = (e.harga || 0) * (e.jumlah || 0);
+    optionsHTML += `<option value="${e.perusahaan} (${e.lokasi || '-'})">${e.perusahaan} (${e.lokasi || '-'}) - Rp ${total.toLocaleString()}</option>`;
+  });
+  
+  selectTagihan.innerHTML = optionsHTML;
+  selectKeuangan.innerHTML = optionsHTML;
+}
+
+function addKeuangan() {
+  let data = { 
+    tgl: document.getElementById('tgl').value, 
+    jenis: document.getElementById('jenis').value, 
+    project: document.getElementById('projectKeuangan').value || '-',
+    ket: document.getElementById('ket').value, 
+    jumlah: parseInt(document.getElementById('jumlah').value) || 0,
+    isAuto: false 
+  };
+  keuangan.push(data); 
+  save(); 
+  render();
+
+  document.getElementById('tgl').value = '';
+  document.getElementById('projectKeuangan').value = '';
+  document.getElementById('ket').value = '';
+  document.getElementById('jumlah').value = '';
+}
+
+function addMCU() {
+  let checkedItems = [];
+  document.querySelectorAll('#itemPemeriksaan input:checked').forEach(cb => {
+    checkedItems.push(cb.value);
+  });
+
+  let harga = parseInt(document.getElementById('hargaProject').value) || 0;
+  let jumlahPasien = parseInt(document.getElementById('jmlPasien').value) || 0;
+
+  let data = { 
+    perusahaan: document.getElementById('perusahaan').value, 
+    lokasi: document.getElementById('lokasiProject').value, 
+    tgl: document.getElementById('tglMCU').value, 
+    items: checkedItems,
+    harga: harga,
+    jumlah: jumlahPasien
+  };
+  
+  mcu.push(data); 
+  save(); 
+  populateMcuDropdowns();
+  render();
+
+  document.getElementById('perusahaan').value = '';
+  document.getElementById('lokasiProject').value = '';
+  document.getElementById('tglMCU').value = '';
+  document.getElementById('hargaProject').value = '';
+  document.getElementById('jmlPasien').value = '';
+  document.querySelectorAll('#itemPemeriksaan input').forEach(cb => cb.checked = false);
+}
+
+function addTagihan() {
+  let selectedMcuVal = document.getElementById('selectMcuClient').value;
+  if(selectedMcuVal === "") {
+    alert("Silakan pilih Client MCU terlebih dahulu!");
+    return;
+  }
+  
+  let selectedMcu = mcu.find(e => `${e.perusahaan} (${e.lokasi || '-'})` === selectedMcuVal);
+  if(!selectedMcu) return;
+
+  let fileInput = document.getElementById('lampiranInvoice');
+  let file = fileInput.files[0];
+  
+  let idTagihan = 'inv_' + Date.now(); 
+  let data = {
+    id: idTagihan,
+    nama: selectedMcu.perusahaan,
+    lokasi: selectedMcu.lokasi || '-',
+    totalHarga: (selectedMcu.harga || 0) * (selectedMcu.jumlah || 0),
+    noInvoice: document.getElementById('noInvoice').value,
+    tglKirim: document.getElementById('tglKirimInvoice').value,
+    durasi: parseInt(document.getElementById('durasiInvoice').value),
+    status: 'Belum Lunas',
+    lampiran: ""
+  };
+
+  if (file) {
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      data.lampiran = e.target.result;
+      tagihan.push(data);
+      save();
+      render();
+      resetFormTagihan();
+    }
+    reader.readAsDataURL(file);
+  } else {
+    tagihan.push(data);
+    save();
+    render();
+    resetFormTagihan();
+  }
+}
+
+function resetFormTagihan() {
+  document.getElementById('selectMcuClient').value = '';
+  document.getElementById('noInvoice').value = '';
+  document.getElementById('tglKirimInvoice').value = '';
+  document.getElementById('lampiranInvoice').value = '';
+  document.getElementById('durasiInvoice').value = '14';
+}
+
+function updateStatus(index, value) {
+  let currentTagihan = tagihan[index];
+  currentTagihan.status = value;
+
+  if (value === 'Lunas') {
+    let isExist = keuangan.some(k => k.isAuto === true && k.refId === currentTagihan.id);
+    if (!isExist) {
+      let tglHariIni = new Date().toISOString().split('T')[0];
+      keuangan.push({
+        tgl: tglHariIni,
+        jenis: 'in',
+        project: `${currentTagihan.nama} (${currentTagihan.lokasi || '-'})`,
+        ket: `Pelunasan Corporate: ${currentTagihan.nama} (Inv: ${currentTagihan.noInvoice || '-'})`,
+        jumlah: currentTagihan.totalHarga,
+        isAuto: true, 
+        refId: currentTagihan.id
+      });
+    }
+  } else {
+    keuangan = keuangan.filter(k => {
+      if (k.isAuto === true && k.refId === currentTagihan.id) {
+        return false; 
+      }
+      return true; 
+    });
+  }
+
+  save();
+  render();
+}
+
+function del(i, tipe){ 
+  if(tipe=='k') {
+    keuangan.splice(i,1); 
+  }
+  if(tipe=='m') {
+    mcu.splice(i,1); 
+    populateMcuDropdowns();
+  }
+  if(tipe=='t') {
+    let targetId = tagihan[i].id;
+    keuangan = keuangan.filter(k => {
+      if (k.isAuto === true && k.refId === targetId) {
+        return false;
+      }
+      return true;
+    });
+    tagihan.splice(i,1);
+  } 
+  save(); 
+  render(); 
+}
+
+function save(){
+  localStorage.setItem('nvm_keuangan', JSON.stringify(keuangan));
+  localStorage.setItem('nvm_mcu', JSON.stringify(mcu));
+  localStorage.setItem('nvm_tagihan', JSON.stringify(tagihan));
+}
+
+function renderPengeluaranProject() {
+  let listP = document.getElementById('listPengeluaranProject');
+  listP.innerHTML = '';
+  
+  if(mcu.length === 0) {
+    listP.innerHTML = '<tr><td colspan="4" style="text-align:center;">Tidak ada data project MCU.</td></tr>';
+    return;
+  }
+  
+  mcu.forEach((e, i) => {
+    let identifier = `${e.perusahaan} (${e.lokasi || '-'})`;
+    
+    let totalProjectOut = keuangan
+      .filter(k => k.jenis === 'out' && k.project === identifier)
+      .reduce((sum, current) => sum + (current.jumlah || 0), 0);
+      
+    listP.innerHTML += `<tr>
+      <td>${i + 1}</td>
+      <td><strong>${e.perusahaan}</strong></td>
+      <td>${e.lokasi || '-'}</td>
+      <td><strong>Rp ${totalProjectOut.toLocaleString()}</strong></td>
+    </tr>`;
+  });
+}
+
+function render(){
+  // Render Keuangan
+  let listK = document.getElementById('listKeuangan'); listK.innerHTML=''; let totalIn=0, totalOut=0;
+  keuangan.forEach((e,i)=>{ 
+    let badgeStyle = e.isAuto ? 'background:#E8F5E9; color:#007a3d; padding:2px 6px; border-radius:4px; font-size:11px;' : '';
+    let autoLabel = e.isAuto ? `<br><span style="${badgeStyle}">Otomatis Penagihan</span>` : '';
+    
+    listK.innerHTML += `<tr>
+      <td>${e.tgl}</td>
+      <td><strong>${e.jenis=='in'?'Pemasukan':'Pengeluaran'}</strong></td>
+      <td>${e.project || '-'}</td>
+      <td>${e.ket}${autoLabel}</td>
+      <td>Rp ${(e.jumlah || 0).toLocaleString()}</td>
+      <td><button class="btn-del" onclick="del(${i},'k')">Hapus</button></td>
+    </tr>`;
+    if(e.jenis=='in') totalIn+=e.jumlah; else totalOut+=e.jumlah;
+  });
+  
+  // Render MCU
+  let listM = document.getElementById('listMCU'); listM.innerHTML='';
+  mcu.forEach((e,i)=>{ 
+    let itemsString = e.items && e.items.length > 0 ? e.items.join(', ') : '-';
+    let hargaPerPasien = e.harga || 0;
+    let jmlPasien = e.jumlah || 0;
+    let totalHarga = hargaPerPasien * jmlPasien;
+
+    listM.innerHTML += `<tr>
+      <td>${e.perusahaan}</td>
+      <td>${e.lokasi || '-'}</td>
+      <td>${e.tgl}</td>
+      <td>${itemsString}</td>
+      <td>Rp ${hargaPerPasien.toLocaleString()}</td>
+      <td>${jmlPasien}</td>
+      <td><strong>Rp ${totalHarga.toLocaleString()}</strong></td>
+      <td><button class="btn-del" onclick="del(${i},'m')">Hapus</button></td>
+    </tr>`;
+  });
+
+  // Render Tagihan
+  let listT = document.getElementById('listTagihan'); listT.innerHTML=''; let totalPiutang=0;
+  tagihan.forEach((e,i)=>{
+    let tglJatuhTempoStr = "-";
+    if (e.tglKirim) {
+      let tglKirimDate = new Date(e.tglKirim);
+      tglKirimDate.setDate(tglKirimDate.getDate() + parseInt(e.durasi));
+      let yyyy = tglKirimDate.getFullYear();
+      let mm = String(tglKirimDate.getMonth() + 1).padStart(2, '0');
+      let dd = String(tglKirimDate.getDate()).padStart(2, '0');
+      tglJatuhTempoStr = `${dd}-${mm}-${yyyy}`;
+    }
+
+    let lampiranHTML = "-";
+    if(e.lampiran) {
+      lampiranHTML = `<a href="${e.lampiran}" target="_blank" class="btn-view">Lihat File</a>`;
+    }
+
+    let isLunas = e.status === 'Lunas';
+    let selectStatusHTML = `
+      <select onchange="updateStatus(${i}, this.value)" class="select-status ${isLunas ? 'lunas' : 'belum'}">
+        <option value="Belum Lunas" ${!isLunas ? 'selected' : ''}>Belum Lunas</option>
+        <option value="Lunas" ${isLunas ? 'selected' : ''}>Lunas</option>
+      </select>
+    `;
+
+    listT.innerHTML += `<tr>
+      <td><strong>${e.nama}</strong><br><span style="font-size:11px;color:#666;">Project: ${e.lokasi || '-'}</span></td>
+      <td>${e.noInvoice || '-'}</td>
+      <td>${e.tglKirim ? e.tglKirim : '-'} <br> ${lampiranHTML}</td>
+      <td>${e.durasi} Hari</td>
+      <td><strong>Rp ${(e.totalHarga || 0).toLocaleString()}</strong></td>
+      <td>${tglJatuhTempoStr}</td>
+      <td>${selectStatusHTML}</td>
+      <td><button class="btn-del" onclick="del(${i},'t')">Hapus</button></td>
+    </tr>`;
+
+    if(e.status !== 'Lunas') {
+      totalPiutang += (e.totalHarga || 0);
+    }
+  });
+
+  document.getElementById('totalIn').innerText = 'Rp ' + totalIn.toLocaleString();
+  document.getElementById('totalOut').innerText = 'Rp ' + totalOut.toLocaleString();
+  document.getElementById('totalPiutang').innerText = 'Rp ' + totalPiutang.toLocaleString();
+}
+
+populateMcuDropdowns();
+render();
+</script>
+</body>
+</html>
