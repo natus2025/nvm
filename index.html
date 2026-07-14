@@ -189,10 +189,43 @@ th { background:#00A651; color:white; }
 
 </div>
 <script>
-// Penamaan database lokal terpisah khusus PT. Natus Vincere Medika (menggunakan prefix nvm_)
-let keuangan = JSON.parse(localStorage.getItem('nvm_keuangan')) || [];
-let mcu = JSON.parse(localStorage.getItem('nvm_mcu')) || [];
-let tagihan = JSON.parse(localStorage.getItem('nvm_tagihan')) || [];
+// GANTI DENGAN URL APLIKASI WEB ANDA DARI GOOGLE APPS SCRIPT
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIN6GBESCqLpn6URsglb_z-DWADRhW_LjrGMgsab51sqQ4FYL22zOFcQjE5OCBnWEciA/exec";
+
+let keuangan = [];
+let mcu = [];
+let tagihan = [];
+
+// Fungsi untuk mengambil data dari Google Sheet saat aplikasi dibuka
+async function loadDataFromSpreadsheet() {
+  try {
+    // Tampilkan indikator loading sederhana pada summary card jika diperlukan
+    document.getElementById('totalIn').innerText = 'Loading...';
+    
+    let response = await fetch(SCRIPT_URL);
+    let result = await response.json();
+    
+    if (result.status === "success") {
+      keuangan = result.keuangan || [];
+      mcu = result.mcu || [];
+      tagihan = result.tagihan || [];
+      
+      // Simpan cadangan di localstorage
+      localStorage.setItem('klinik_keuangan', JSON.stringify(keuangan));
+      localStorage.setItem('klinik_mcu', JSON.stringify(mcu));
+      localStorage.setItem('klinik_tagihan', JSON.stringify(tagihan));
+    }
+  } catch (error) {
+    console.error("Gagal memuat data dari awan, beralih ke penyimpanan lokal:", error);
+    // Jika internet offline, gunakan data localstorage lama
+    keuangan = JSON.parse(localStorage.getItem('klinik_keuangan')) || [];
+    mcu = JSON.parse(localStorage.getItem('klinik_mcu')) || [];
+    tagihan = JSON.parse(localStorage.getItem('klinik_tagihan')) || [];
+  } finally {
+    populateMcuDropdowns();
+    render();
+  }
+}
 
 function showTab(tab) {
   document.querySelectorAll('.tab-content').forEach(e=>e.style.display='none');
@@ -231,7 +264,7 @@ function addKeuangan() {
     isAuto: false 
   };
   keuangan.push(data); 
-  save(); 
+  saveAndSync(); 
   render();
 
   document.getElementById('tgl').value = '';
@@ -259,7 +292,7 @@ function addMCU() {
   };
   
   mcu.push(data); 
-  save(); 
+  saveAndSync(); 
   populateMcuDropdowns();
   render();
 
@@ -300,16 +333,16 @@ function addTagihan() {
   if (file) {
     let reader = new FileReader();
     reader.onload = function(e) {
-      data.lampiran = e.target.result;
+      data.lampiran = e.target.result; // Lampiran tersimpan sebagai string Base64 aman di ekosistem Sheet JSON
       tagihan.push(data);
-      save();
+      saveAndSync();
       render();
       resetFormTagihan();
     }
     reader.readAsDataURL(file);
   } else {
     tagihan.push(data);
-    save();
+    saveAndSync();
     render();
     resetFormTagihan();
   }
@@ -350,7 +383,7 @@ function updateStatus(index, value) {
     });
   }
 
-  save();
+  saveAndSync();
   render();
 }
 
@@ -372,14 +405,29 @@ function del(i, tipe){
     });
     tagihan.splice(i,1);
   } 
-  save(); 
+  saveAndSync(); 
   render(); 
 }
 
-function save(){
-  localStorage.setItem('nvm_keuangan', JSON.stringify(keuangan));
-  localStorage.setItem('nvm_mcu', JSON.stringify(mcu));
-  localStorage.setItem('nvm_tagihan', JSON.stringify(tagihan));
+// Fungsi gabungan: Simpan ke Lokal dan Kirim Sinkronisasi ke Google Sheet secara Real-time
+function saveAndSync(){
+  localStorage.setItem('klinik_keuangan', JSON.stringify(keuangan));
+  localStorage.setItem('klinik_mcu', JSON.stringify(mcu));
+  localStorage.setItem('klinik_tagihan', JSON.stringify(tagihan));
+  
+  // Kirim data ke Cloud Google Sheet
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors', // Menghindari isu blokir CORS browser di GitHub Pages
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: "saveAll",
+      keuangan: keuangan,
+      mcu: mcu,
+      tagihan: tagihan
+    })
+  }).then(() => console.log("Data tersinkronisasi otomatis ke Google Sheets."))
+    .catch(err => console.error("Sinkronisasi gagal:", err));
 }
 
 function renderPengeluaranProject() {
@@ -455,6 +503,7 @@ function render(){
       let yyyy = tglKirimDate.getFullYear();
       let mm = String(tglKirimDate.getMonth() + 1).padStart(2, '0');
       let dd = String(tglKirimDate.getDate()).padStart(2, '0');
+      let tglJatuhTempoStrRaw = `${yyyy}-${mm}-${dd}`;
       tglJatuhTempoStr = `${dd}-${mm}-${yyyy}`;
     }
 
@@ -492,8 +541,8 @@ function render(){
   document.getElementById('totalPiutang').innerText = 'Rp ' + totalPiutang.toLocaleString();
 }
 
-populateMcuDropdowns();
-render();
+// Menjalankan inisialisasi awal dengan memanggil data dari Google Sheet
+loadDataFromSpreadsheet();
 </script>
 </body>
 </html>
