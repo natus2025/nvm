@@ -41,6 +41,8 @@ th { background:#00A651; color:white; }
 .select-status { padding: 4px; border-radius: 4px; font-weight: bold; }
 .inline-checkbox { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #555; font-weight: bold; margin-bottom: 4px; cursor: pointer; }
 .file-upload-table { font-size: 11px; margin-top: 4px; width: 145px; }
+.btn-remove-file { background: #f44336; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; display: inline-block; margin-top: 4px; border: none; cursor: pointer; }
+.btn-remove-file:hover { background: #d32f2f; }
 </style>
 </head>
 <body>
@@ -406,6 +408,14 @@ function uploadSoftInvoiceTable(index, inputElement) {
   }
 }
 
+function removeSoftInvoiceTable(index) {
+  if(confirm("Apakah Anda yakin ingin menghapus file soft invoice ini?")) {
+    tagihan[index].lampiran = "";
+    saveAndSync();
+    render();
+  }
+}
+
 function uploadBuktiKirimTable(index, inputElement) {
   let file = inputElement.files[0];
   if (file) {
@@ -416,6 +426,14 @@ function uploadBuktiKirimTable(index, inputElement) {
       render();
     }
     reader.readAsDataURL(file);
+  }
+}
+
+function removeBuktiKirimTable(index) {
+  if(confirm("Apakah Anda yakin ingin menghapus file bukti kirim ini?")) {
+    tagihan[index].buktiKirim = "";
+    saveAndSync();
+    render();
   }
 }
 
@@ -638,7 +656,7 @@ function render(){
     let labelEdited = e.customTotal !== undefined ? ' <span style="font-size:10px; color:orange; font-weight:normal;">(Disesuaikan)</span>' : '';
     
     let isiKet = e.keterangan ? e.keterangan : '<span style="color:#aaa; font-style:italic;">Tidak ada keterangan</span>';
-    let textTombolKet = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
+optionsHTML = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
 
     listM.innerHTML += `<tr>
       <td>${e.perusahaan}</td>
@@ -653,7 +671,7 @@ function render(){
       <td><strong>Rp ${totalHarga.toLocaleString()}</strong>${labelEdited}</td>
       <td>
           <div>${isiKet}</div>
-          <button class="btn-ket" onclick="updateKeteranganMcu(${i})">${textTombolKet}</button>
+          <button class="btn-ket" onclick="updateKeteranganMcu(${i})">${optionsHTML}</button>
       </td>
       <td>
         <button class="btn-edit" onclick="editTotalMcu(${i})">Edit Total</button>
@@ -675,22 +693,28 @@ function render(){
       tglJatuhTempoStr = `${dd}-${mm}-${yyyy}`;
     }
 
-    // 1. Soft Invoice pindah ke kolom No. Invoice
+    // 1. Soft Invoice pindah ke kolom No. Invoice + Fitur Hapus
     let lampiranHTML = "";
     if(e.lampiran) {
-      lampiranHTML = `<br><a href="${e.lampiran}" target="_blank" class="btn-view">Lihat Soft Invoice</a>`;
+      lampiranHTML = `
+        <br><a href="${e.lampiran}" target="_blank" class="btn-view">Lihat Soft Invoice</a>
+        <br><button class="btn-remove-file" onclick="removeSoftInvoiceTable(${i})">Hapus File</button>
+      `;
     } else {
       lampiranHTML = `
         <div style="margin-top:5px;">
-          <span style="font-size:11px;color:#999;display:block;">No Soft Invoice</span>
+          <span style="font-size:11px;color:#999;display:block;">Belum ada file</span>
           <input type="file" class="file-upload-table" accept="image/*,application/pdf" onchange="uploadSoftInvoiceTable(${i}, this)">
         </div>`;
     }
 
-    // 2. Bukti Kirim murni di kolom Tgl Kirim & Bukti Kirim
+    // 2. Bukti Kirim murni di kolom Tgl Kirim & Bukti Kirim + Fitur Hapus
     let buktiKirimHTML = "";
     if(e.buktiKirim) {
-      buktiKirimHTML = `<br><a href="${e.buktiKirim}" target="_blank" class="btn-view-bukti">Lihat Bukti Kirim</a>`;
+      buktiKirimHTML = `
+        <br><a href="${e.buktiKirim}" target="_blank" class="btn-view-bukti">Lihat Bukti Kirim</a>
+        <br><button class="btn-remove-file" onclick="removeBuktiKirimTable(${i})">Hapus File</button>
+      `;
     } else {
       buktiKirimHTML = `
         <div style="margin-top:5px;">
@@ -722,7 +746,8 @@ function render(){
       <td><strong>Rp ${(e.totalHarga || 0).toLocaleString()}</strong>${dpLabel}</td>
       <td><strong style="color:#d32f2f;">Rp ${sisaPelunasanVal.toLocaleString()}</strong></td>
       <td>${tglJatuhTempoStr}</td>
-      <td>${selectStatusHTML}</td>
+maxRows = selectStatusHTML;
+      listT.innerHTML += `<td>${maxRows}</td>
       <td><button class="btn-del" onclick="del(${i},'t')">Hapus</button></td>
     </tr>`;
 
