@@ -207,6 +207,7 @@ th { background:#00A651; color:white; }
         <th>Nominal RAB (Rp)</th>
         <th>Total Pengeluaran (Rp)</th>
         <th>Selisih (RAB - Pengeluaran)</th>
+        <th>Margin MCU (Rp)</th> <!-- Kolom Baru -->
       </tr>
     </thead>
     <tbody id="listPengeluaranProject"></tbody>
@@ -640,20 +641,29 @@ function renderPengeluaranProject() {
   listP.innerHTML = '';
   
   if(mcu.length === 0) {
-    listP.innerHTML = '<tr><td colspan="6" style="text-align:center;">Tidak ada data project MCU.</td></tr>';
+    listP.innerHTML = '<tr><td colspan="7" style="text-align:center;">Tidak ada data project MCU.</td></tr>'; // colspan diubah ke 7
     return;
   }
   
   mcu.forEach((e, i) => {
     let identifier = `${e.perusahaan} (${e.lokasi || '-'})`;
     
+    // 1. Hitung Total Pengeluaran dari Tab Keuangan
     let totalProjectOut = keuangan
       .filter(k => k.jenis === 'out' && k.project === identifier)
       .reduce((sum, current) => sum + (current.jumlah || 0), 0);
       
+    // 2. Ambil nilai RAB dan hitung Selisih
     let nominalRab = e.rab || 0;
     let selisih = nominalRab - totalProjectOut;
     let selisihColor = selisih >= 0 ? 'green' : 'red';
+    
+    // 3. Hitung Total Harga MCU (mengakomodasi jika ada customTotal/penyesuaian)
+    let totalHargaMcu = e.customTotal !== undefined ? e.customTotal : ((e.harga || 0) * (e.jumlah || 0));
+    
+    // 4. Hitung Margin MCU sesuai rumus Anda
+    let marginMcu = totalHargaMcu + selisih;
+    let marginColor = marginMcu >= 0 ? '#007a3d' : '#d32f2f'; // Hijau jika profit, merah jika minus
       
     listP.innerHTML += `<tr>
       <td>${i + 1}</td>
@@ -662,10 +672,10 @@ function renderPengeluaranProject() {
       <td><strong>Rp ${nominalRab.toLocaleString()}</strong></td>
       <td><strong>Rp ${totalProjectOut.toLocaleString()}</strong></td>
       <td style="color: ${selisihColor}; font-weight: bold;">Rp ${selisih.toLocaleString()}</td>
+      <td style="color: ${marginColor}; font-weight: bold; background: #f9f9f9;">Rp ${marginMcu.toLocaleString()}</td> <!-- Kolom Baru -->
     </tr>`;
   });
 }
-
 function renderLaporanBulanan() {
   let listL = document.getElementById('listLaporanBulanan');
   listL.innerHTML = '';
