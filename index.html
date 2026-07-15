@@ -247,7 +247,9 @@ function showTab(tab) {
   document.querySelectorAll('.tab-content').forEach(e=>e.style.display='none');
   document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
   document.getElementById(tab).style.display='block';
-  if(event) event.target.classList.add('active');
+  if(event && event.target && event.target.classList.contains('tab')) {
+    event.target.classList.add('active');
+  }
   
   populateMcuDropdowns();
   
@@ -656,7 +658,7 @@ function render(){
     let labelEdited = e.customTotal !== undefined ? ' <span style="font-size:10px; color:orange; font-weight:normal;">(Disesuaikan)</span>' : '';
     
     let isiKet = e.keterangan ? e.keterangan : '<span style="color:#aaa; font-style:italic;">Tidak ada keterangan</span>';
-optionsHTML = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
+    let textTombolKet = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
 
     listM.innerHTML += `<tr>
       <td>${e.perusahaan}</td>
@@ -671,7 +673,7 @@ optionsHTML = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
       <td><strong>Rp ${totalHarga.toLocaleString()}</strong>${labelEdited}</td>
       <td>
           <div>${isiKet}</div>
-          <button class="btn-ket" onclick="updateKeteranganMcu(${i})">${optionsHTML}</button>
+          <button class="btn-ket" onclick="updateKeteranganMcu(${i})">${textTombolKet}</button>
       </td>
       <td>
         <button class="btn-edit" onclick="editTotalMcu(${i})">Edit Total</button>
@@ -680,7 +682,7 @@ optionsHTML = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
     </tr>`;
   });
 
-  // Render Tagihan dengan Perbaikan Posisi Berkas Sesuai Permintaan
+  // Render Tagihan
   let listT = document.getElementById('listTagihan'); listT.innerHTML=''; let totalPiutang=0;
   tagihan.forEach((e,i)=>{
     let tglJatuhTempoStr = "-";
@@ -693,7 +695,7 @@ optionsHTML = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
       tglJatuhTempoStr = `${dd}-${mm}-${yyyy}`;
     }
 
-    // 1. Soft Invoice pindah ke kolom No. Invoice + Fitur Hapus
+    // 1. Soft Invoice di kolom No. Invoice + Fitur Hapus Berkas
     let lampiranHTML = "";
     if(e.lampiran) {
       lampiranHTML = `
@@ -708,7 +710,7 @@ optionsHTML = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
         </div>`;
     }
 
-    // 2. Bukti Kirim murni di kolom Tgl Kirim & Bukti Kirim + Fitur Hapus
+    // 2. Bukti Kirim di kolom Tgl Kirim & Bukti Kirim + Fitur Hapus Berkas
     let buktiKirimHTML = "";
     if(e.buktiKirim) {
       buktiKirimHTML = `
@@ -735,7 +737,12 @@ optionsHTML = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
       </select>
     `;
 
+    // Logika Sisa Pelunasan Baru (Otomatis 0 jika Lunas)
     let sisaPelunasanVal = e.sisaPelunasan !== undefined ? e.sisaPelunasan : e.totalHarga;
+    if (e.status === 'Lunas') {
+      sisaPelunasanVal = 0;
+    }
+    
     let dpLabel = e.status === 'Down Payment' ? `<br><span style="font-size:11px; color:#FF9800;">DP: Rp ${(e.dpNominal || 0).toLocaleString()}</span>` : '';
 
     listT.innerHTML += `<tr>
@@ -746,8 +753,7 @@ optionsHTML = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
       <td><strong>Rp ${(e.totalHarga || 0).toLocaleString()}</strong>${dpLabel}</td>
       <td><strong style="color:#d32f2f;">Rp ${sisaPelunasanVal.toLocaleString()}</strong></td>
       <td>${tglJatuhTempoStr}</td>
-maxRows = selectStatusHTML;
-      listT.innerHTML += `<td>${maxRows}</td>
+      <td>${selectStatusHTML}</td>
       <td><button class="btn-del" onclick="del(${i},'t')">Hapus</button></td>
     </tr>`;
 
