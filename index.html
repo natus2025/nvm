@@ -61,7 +61,7 @@ th { background:#00A651; color:white; }
   <button class="tab" onclick="showTab('penagihan')">2. Penagihan Corporate</button>
   <button class="tab" onclick="showTab('keuangan')">3. Keuangan</button>
   <button class="tab" onclick="showTab('pengeluaran-project')">4. Pengeluaran per-Project</button>
-  <button class="tab" onclick="showTab('laporan-bulanan')">5. Laporan Bulanan</button> <!-- Tambahkan ini -->
+  <button class="tab" onclick="showTab('laporan-bulanan')">5. Laporan Bulanan</button>
 </div>
 
 <!-- TAB MCU (TAB 1) -->
@@ -90,6 +90,7 @@ th { background:#00A651; color:white; }
     
     <div><label class="small-text">Harga per Pasien (Rp)</label><input type="number" id="hargaProject" placeholder="Harga/Pasien" style="width:100%; box-sizing:border-box;"></div>
     <div><label class="small-text">Jumlah Pasien</label><input type="number" id="jmlPasien" placeholder="Jumlah Pasien" style="width:100%; box-sizing:border-box;"></div>
+    <div><label class="small-text">Nominal RAB (Rp)</label><input type="number" id="rabProject" placeholder="Nominal RAB" style="width:100%; box-sizing:border-box;"></div>
     <button onclick="addMCU()">+ Simpan</button>
   </div>
   <table>
@@ -101,6 +102,7 @@ th { background:#00A651; color:white; }
         <th>Item Pemeriksaan</th>
         <th>Harga/Pasien</th>
         <th>Jumlah Pasien</th>
+        <th>Nominal RAB</th>
         <th>Total Harga</th>
         <th>Keterangan</th>
         <th>Aksi</th>
@@ -202,7 +204,9 @@ th { background:#00A651; color:white; }
         <th>No</th>
         <th>Nama Client / Perusahaan</th>
         <th>Nama / Lokasi Project</th>
+        <th>Nominal RAB (Rp)</th>
         <th>Total Pengeluaran (Rp)</th>
+        <th>Selisih (RAB - Pengeluaran)</th>
       </tr>
     </thead>
     <tbody id="listPengeluaranProject"></tbody>
@@ -271,7 +275,7 @@ function showTab(tab) {
   if (tab === 'pengeluaran-project') {
     renderPengeluaranProject();
   }
-  if (tab === 'laporan-bulanan') { // Tambahkan kondisi ini
+  if (tab === 'laporan-bulanan') {
     renderLaporanBulanan();
   }
 }
@@ -338,6 +342,7 @@ function addMCU() {
 
   let harga = parseInt(document.getElementById('hargaProject').value) || 0;
   let jumlahPasien = parseInt(document.getElementById('jmlPasien').value) || 0;
+  let rab = parseInt(document.getElementById('rabProject').value) || 0;
 
   let data = { 
     perusahaan: document.getElementById('perusahaan').value, 
@@ -346,6 +351,7 @@ function addMCU() {
     items: checkedItems,
     harga: harga,
     jumlah: jumlahPasien,
+    rab: rab,
     customTotal: undefined,
     keterangan: ""
   };
@@ -360,6 +366,7 @@ function addMCU() {
   document.getElementById('tglMCU').value = '';
   document.getElementById('hargaProject').value = '';
   document.getElementById('jmlPasien').value = '';
+  document.getElementById('rabProject').value = '';
   document.querySelectorAll('#itemPemeriksaan input').forEach(cb => cb.checked = false);
 }
 
@@ -389,6 +396,18 @@ function editTotalMcu(index) {
 
     saveAndSync();
     populateMcuDropdowns();
+    render();
+  }
+}
+
+function editRabMcu(index) {
+  let currentMcu = mcu[index];
+  let currentRab = currentMcu.rab || 0;
+  
+  let newRab = prompt(`Edit Nominal RAB untuk ${currentMcu.perusahaan}:`, currentRab);
+  if (newRab !== null) {
+    mcu[index].rab = parseInt(newRab) || 0;
+    saveAndSync();
     render();
   }
 }
@@ -489,7 +508,7 @@ function addTagihan() {
     durasi: parseInt(document.getElementById('durasiInvoice').value),
     status: 'Belum Lunas',
     lampiran: "",
-    buktiKirim: ""
+    buktiKirim: "" 
   };
 
   if (file) {
@@ -621,7 +640,7 @@ function renderPengeluaranProject() {
   listP.innerHTML = '';
   
   if(mcu.length === 0) {
-    listP.innerHTML = '<tr><td colspan="4" style="text-align:center;">Tidak ada data project MCU.</td></tr>';
+    listP.innerHTML = '<tr><td colspan="6" style="text-align:center;">Tidak ada data project MCU.</td></tr>';
     return;
   }
   
@@ -632,11 +651,17 @@ function renderPengeluaranProject() {
       .filter(k => k.jenis === 'out' && k.project === identifier)
       .reduce((sum, current) => sum + (current.jumlah || 0), 0);
       
+    let nominalRab = e.rab || 0;
+    let selisih = nominalRab - totalProjectOut;
+    let selisihColor = selisih >= 0 ? 'green' : 'red';
+      
     listP.innerHTML += `<tr>
       <td>${i + 1}</td>
       <td><strong>${e.perusahaan}</strong></td>
       <td>${e.lokasi || '-'}</td>
+      <td><strong>Rp ${nominalRab.toLocaleString()}</strong></td>
       <td><strong>Rp ${totalProjectOut.toLocaleString()}</strong></td>
+      <td style="color: ${selisihColor}; font-weight: bold;">Rp ${selisih.toLocaleString()}</td>
     </tr>`;
   });
 }
@@ -645,23 +670,20 @@ function renderLaporanBulanan() {
   let listL = document.getElementById('listLaporanBulanan');
   listL.innerHTML = '';
 
-  // Objek penampung data yang dikelompokkan berdasarkan YYYY-MM
   let laporanData = {};
 
-  // 1. Hitung Total Project MCU per Bulan berdasarkan Tgl. Pelaksanaan MCU
   mcu.forEach(e => {
     if (!e.tgl) return;
-    let blnThn = e.tgl.substring(0, 7); // Mengambil format "YYYY-MM"
+    let blnThn = e.tgl.substring(0, 7);
     if (!laporanData[blnThn]) {
       laporanData[blnThn] = { totalProject: 0, pemasukan: 0, pengeluaran: 0 };
     }
     laporanData[blnThn].totalProject += 1;
   });
 
-  // 2. Hitung Pemasukan dan Pengeluaran per Bulan berdasarkan Tanggal Transaksi
   keuangan.forEach(k => {
     if (!k.tgl) return;
-    let blnThn = k.tgl.substring(0, 7); // Mengambil format "YYYY-MM"
+    let blnThn = k.tgl.substring(0, 7);
     if (!laporanData[blnThn]) {
       laporanData[blnThn] = { totalProject: 0, pemasukan: 0, pengeluaran: 0 };
     }
@@ -673,7 +695,6 @@ function renderLaporanBulanan() {
     }
   });
 
-  // Ambil semua key bulan-tahun, urutkan dari yang terbaru
   let sortedKeys = Object.keys(laporanData).sort().reverse();
 
   if (sortedKeys.length === 0) {
@@ -681,7 +702,6 @@ function renderLaporanBulanan() {
     return;
   }
 
-  // Nama-nama bulan dalam Bahasa Indonesia
   const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
   sortedKeys.forEach(key => {
@@ -731,6 +751,7 @@ function render(){
     let itemsString = e.items && e.items.length > 0 ? e.items.join(', ') : '-';
     let hargaPerPasien = e.harga || 0;
     let jmlPasien = e.jumlah || 0;
+    let nominalRab = e.rab || 0;
     
     let totalHarga = e.customTotal !== undefined ? e.customTotal : (hargaPerPasien * jmlPasien);
     let labelEdited = e.customTotal !== undefined ? ' <span style="font-size:10px; color:orange; font-weight:normal;">(Disesuaikan)</span>' : '';
@@ -748,6 +769,10 @@ function render(){
       </td>
       <td>Rp ${hargaPerPasien.toLocaleString()}</td>
       <td>${jmlPasien}</td>
+      <td>
+        <div>Rp ${nominalRab.toLocaleString()}</div>
+        <button class="btn-ket" style="background:#FF9800;" onclick="editRabMcu(${i})">Edit RAB</button>
+      </td>
       <td><strong>Rp ${totalHarga.toLocaleString()}</strong>${labelEdited}</td>
       <td>
           <div>${isiKet}</div>
@@ -773,7 +798,6 @@ function render(){
       tglJatuhTempoStr = `${dd}-${mm}-${yyyy}`;
     }
 
-    // 1. Soft Invoice di kolom No. Invoice + Fitur Hapus Berkas
     let lampiranHTML = "";
     if(e.lampiran) {
       lampiranHTML = `
@@ -788,7 +812,6 @@ function render(){
         </div>`;
     }
 
-    // 2. Bukti Kirim di kolom Tgl Kirim & Bukti Kirim + Fitur Hapus Berkas
     let buktiKirimHTML = "";
     if(e.buktiKirim) {
       buktiKirimHTML = `
@@ -815,7 +838,6 @@ function render(){
       </select>
     `;
 
-    // Logika Sisa Pelunasan Baru (Otomatis 0 jika Lunas)
     let sisaPelunasanVal = e.sisaPelunasan !== undefined ? e.sisaPelunasan : e.totalHarga;
     if (e.status === 'Lunas') {
       sisaPelunasanVal = 0;
