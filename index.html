@@ -5,7 +5,7 @@
 <title>Tracking - PT. Natus Vincere Medika</title>
 <style>
 body { font-family: 'Poppins', sans-serif; background:#E8F5E9; padding:15px; }
-.container { max-width:1200px; margin:auto; background:white; padding:20px; border-radius:12px; }
+.container { max-width:1300px; margin:auto; background:white; padding:20px; border-radius:12px; }
 h1 { color:#00A651; text-align:center; }
 .logo { text-align:center; font-size:20px; font-weight:bold; color:#00A651; }
 .tabs { display:flex; gap:10px; margin:20px 0; flex-wrap:wrap; }
@@ -21,22 +21,26 @@ th { background:#00A651; color:white; }
 .summary { display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; margin:20px 0; }
 .card { padding:15px; border-radius:10px; color:white; text-align:center; }
 .in { background:#4CAF50; } .out { background:#F44336; } .piutang { background:#FF9800; }
-.lunas { color:green; font-weight:bold; } .belum { color:red; font-weight:bold; }
+.lunas { color:green; font-weight:bold; } .belum { color:red; font-weight:bold; } .dp-status { color: #FF9800; font-weight: bold; }
 
 /* Style tambahan */
 .checkbox-group { border: 1px solid #ccc; border-radius: 8px; padding: 10px; max-height: 120px; overflow-y: auto; background: #fff; font-size: 13px; }
 .checkbox-group label { display: block; margin-bottom: 5px; cursor: pointer; }
 .checkbox-group input { margin-right: 8px; padding: 0; }
 .small-text { font-size: 12px; color: #555; font-weight: bold; display: block; margin-bottom: 4px; }
-.btn-view { background: #2196F3; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 11px; }
+.btn-view { background: #2196F3; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 11px; display: inline-block; margin-top: 4px; }
 .btn-view:hover { background: #0b7dda; }
+.btn-view-bukti { background: #9c27b0; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 11px; display: inline-block; margin-top: 4px; }
+.btn-view-bukti:hover { background: #7b1fa2; }
 .btn-del { background: #f44336; padding: 6px 10px; }
 .btn-del:hover { background: #da190b; }
 .btn-edit { background: #FF9800; padding: 6px 10px; margin-right: 2px; }
 .btn-edit:hover { background: #e68a00; }
-.btn-ket { background: #757575; padding: 4px 8px; font-size: 11px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+.btn-ket { background: #757575; padding: 4px 8px; font-size: 11px; border-radius: 4px; display: inline-block; margin-top: 4px; color: white; border: none; }
 .btn-ket:hover { background: #616161; }
 .select-status { padding: 4px; border-radius: 4px; font-weight: bold; }
+.inline-checkbox { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #555; font-weight: bold; margin-bottom: 4px; cursor: pointer; }
+.file-upload-table { font-size: 11px; margin-top: 4px; width: 145px; }
 </style>
 </head>
 <body>
@@ -63,7 +67,7 @@ th { background:#00A651; color:white; }
   <div class="form" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
     <div><label class="small-text">Nama Client</label><input type="text" id="perusahaan" placeholder="Nama Client" style="width:100%; box-sizing:border-box;"></div>
     <div><label class="small-text">Nama / Lokasi Project</label><input type="text" id="lokasiProject" placeholder="Nama/Lokasi Project" style="width:100%; box-sizing:border-box;"></div>
-    <div><label class="small-text">Tgl. Mulai MCU</label><input type="date" id="tglMCU" style="width:100%; box-sizing:border-box;"></div>
+    <div><label class="small-text">Tgl. Pelaksanaan MCU</label><input type="date" id="tglMCU" style="width:100%; box-sizing:border-box;"></div>
     
     <div>
       <label class="small-text">Item Pemeriksaan</label>
@@ -90,7 +94,7 @@ th { background:#00A651; color:white; }
       <tr>
         <th>Nama Client</th>
         <th>Nama/Lokasi Project</th>
-        <th>Tgl. Mulai MCU</th>
+        <th>Tgl. Pelaksanaan MCU</th>
         <th>Item Pemeriksaan</th>
         <th>Harga/Pasien</th>
         <th>Jumlah Pasien</th>
@@ -106,18 +110,25 @@ th { background:#00A651; color:white; }
 <!-- TAB PENAGIHAN (TAB 2) -->
 <div id="penagihan" class="tab-content" style="display:none">
   <h3>Tracking Penagihan Corporate</h3>
-  <div class="form" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+  <div class="form" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
     <div>
-      <label class="small-text">Pilih Client MCU (Kolom 1)</label>
+      <label class="small-text">Pilih Client MCU</label>
       <select id="selectMcuClient" style="width:100%;">
         <option value="">-- Pilih Client MCU --</option>
       </select>
     </div>
-    <div><label class="small-text">No. Invoice (Kolom 2)</label><input type="text" id="noInvoice" placeholder="No. Invoice" style="width:100%; box-sizing:border-box;"></div>
-    <div><label class="small-text">Tgl. Kirim Invoice (Kolom 3)</label><input type="date" id="tglKirimInvoice" style="width:100%; box-sizing:border-box;"></div>
-    <div><label class="small-text">Upload Lampiran (Kolom 3)</label><input type="file" id="lampiranInvoice" accept="image/*,application/pdf" style="width:100%; box-sizing:border-box;"></div>
     <div>
-      <label class="small-text">Durasi (Kolom 4)</label>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <label class="small-text">No. Invoice</label>
+        <label class="inline-checkbox"><input type="checkbox" id="ppnCheck"> PPN 11%</label>
+      </div>
+      <input type="text" id="noInvoice" placeholder="No. Invoice" style="width:100%; box-sizing:border-box; margin-bottom:8px;">
+      <label class="small-text">Upload Soft Invoice</label>
+      <input type="file" id="lampiranInvoice" accept="image/*,application/pdf" style="width:100%; box-sizing:border-box;">
+    </div>
+    <div><label class="small-text">Tgl. Kirim Invoice</label><input type="date" id="tglKirimInvoice" style="width:100%; box-sizing:border-box;"></div>
+    <div>
+      <label class="small-text">Durasi</label>
       <select id="durasiInvoice" style="width:100%;">
         <option value="14">14 Hari</option>
         <option value="30">30 Hari</option>
@@ -133,9 +144,10 @@ th { background:#00A651; color:white; }
       <tr>
         <th>Nama Perusahaan / Client</th>
         <th>No. Invoice</th>
-        <th>Tgl Kirim & Lampiran</th>
+        <th>Tgl Kirim & Bukti Kirim</th>
         <th>Durasi</th>
         <th>Total Harga MCU</th>
+        <th>Sisa Pelunasan</th>
         <th>Tgl Jatuh Tempo</th>
         <th>Status</th>
         <th>Aksi</th>
@@ -148,7 +160,7 @@ th { background:#00A651; color:white; }
 <!-- TAB KEUANGAN (TAB 3) -->
 <div id="keuangan" class="tab-content" style="display:none">
   <h3>Input Pemasukan / Pengeluaran</h3>
-  <div class="form" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); font-size: 14px; gap: 10px; align-items: end;">
+  <div class="form" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
     <div><label class="small-text">Tanggal</label><input type="date" id="tgl" style="width:100%; box-sizing:border-box;"></div>
     <div><label class="small-text">Jenis</label><select id="jenis" style="width:100%"><option value="in">Pemasukan</option><option value="out">Pengeluaran</option></select></div>
     <div>
@@ -196,7 +208,6 @@ th { background:#00A651; color:white; }
 
 </div>
 <script>
-// URL khusus untuk PT. Natus Vincere Medika sesuai lampiran Anda
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyehOwZZ0H8UDOcI4SgGpSvhOtdJyseBYpBYXzke_c8SSrc79PCqoUh38F6oc1E9FYSeA/exec";
 
 let keuangan = [];
@@ -274,7 +285,7 @@ function addKeuangan() {
   if (file) {
     let reader = new FileReader();
     reader.onload = function(e) {
-      data.bukti = e.target.result; 
+      data.bukti = e.target.result;
       keuangan.push(data); 
       saveAndSync(); 
       render();
@@ -343,6 +354,7 @@ function editTotalMcu(index) {
     tagihan.forEach((t) => {
       if (`${t.nama} (${t.lokasi || '-'})` === identifier) {
         t.totalHarga = parsedTotal;
+        t.sisaPelunasan = t.status === 'Lunas' ? 0 : (t.status === 'Down Payment' ? parsedTotal - (t.dpNominal || 0) : parsedTotal);
         if (t.status === 'Lunas') {
           keuangan.forEach((k) => {
             if (k.isAuto === true && k.refId === t.id) {
@@ -359,6 +371,17 @@ function editTotalMcu(index) {
   }
 }
 
+function editItemMcu(index) {
+  let currentMcu = mcu[index];
+  let currentItems = currentMcu.items && currentMcu.items.length > 0 ? currentMcu.items.join(', ') : '';
+  let newItems = prompt(`Edit Item Pemeriksaan untuk ${currentMcu.perusahaan} (pisahkan dengan koma):`, currentItems);
+  if (newItems !== null) {
+    mcu[index].items = newItems.split(',').map(item => item.trim()).filter(item => item !== "");
+    saveAndSync();
+    render();
+  }
+}
+
 function updateKeteranganMcu(index) {
   let currentMcu = mcu[index];
   let oldKet = currentMcu.keterangan || "";
@@ -367,6 +390,32 @@ function updateKeteranganMcu(index) {
     mcu[index].keterangan = newKet;
     saveAndSync();
     render();
+  }
+}
+
+function uploadSoftInvoiceTable(index, inputElement) {
+  let file = inputElement.files[0];
+  if (file) {
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      tagihan[index].lampiran = e.target.result;
+      saveAndSync();
+      render();
+    }
+    reader.readAsDataURL(file);
+  }
+}
+
+function uploadBuktiKirimTable(index, inputElement) {
+  let file = inputElement.files[0];
+  if (file) {
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      tagihan[index].buktiKirim = e.target.result;
+      saveAndSync();
+      render();
+    }
+    reader.readAsDataURL(file);
   }
 }
 
@@ -386,16 +435,23 @@ function addTagihan() {
   let idTagihan = 'inv_' + Date.now(); 
   let calculatedTotal = selectedMcu.customTotal !== undefined ? selectedMcu.customTotal : ((selectedMcu.harga || 0) * (selectedMcu.jumlah || 0));
   
+  if(document.getElementById('ppnCheck').checked) {
+    calculatedTotal = Math.round(calculatedTotal * 1.11);
+  }
+  
   let data = {
     id: idTagihan,
     nama: selectedMcu.perusahaan,
     lokasi: selectedMcu.lokasi || '-',
     totalHarga: calculatedTotal,
+    sisaPelunasan: calculatedTotal,
+    dpNominal: 0,
     noInvoice: document.getElementById('noInvoice').value,
     tglKirim: document.getElementById('tglKirimInvoice').value,
     durasi: parseInt(document.getElementById('durasiInvoice').value),
     status: 'Belum Lunas',
-    lampiran: ""
+    lampiran: "",
+    buktiKirim: ""
   };
 
   if (file) {
@@ -422,6 +478,7 @@ function resetFormTagihan() {
   document.getElementById('tglKirimInvoice').value = '';
   document.getElementById('lampiranInvoice').value = '';
   document.getElementById('durasiInvoice').value = '14';
+  document.getElementById('ppnCheck').checked = false;
 }
 
 function updateStatus(index, value) {
@@ -429,27 +486,56 @@ function updateStatus(index, value) {
   currentTagihan.status = value;
 
   if (value === 'Lunas') {
-    let isExist = keuangan.some(k => k.isAuto === true && k.refId === currentTagihan.id);
-    if (!isExist) {
-      let tglHariIni = new Date().toISOString().split('T')[0];
-      keuangan.push({
-        tgl: tglHariIni,
-        jenis: 'in',
-        project: `${currentTagihan.nama} (${currentTagihan.lokasi || '-'})`,
-        ket: `Pelunasan Corporate: ${currentTagihan.nama} (Inv: ${currentTagihan.noInvoice || '-'})`,
-        jumlah: currentTagihan.totalHarga,
-        isAuto: true, 
-        refId: currentTagihan.id,
-        bukti: ""
-      });
+    currentTagihan.sisaPelunasan = 0;
+    keuangan = keuangan.filter(k => !(k.isAuto === true && k.refId === currentTagihan.id));
+    
+    let tglHariIni = new Date().toISOString().split('T')[0];
+    keuangan.push({
+      tgl: tglHariIni,
+      jenis: 'in',
+      project: `${currentTagihan.nama} (${currentTagihan.lokasi || '-'})`,
+      ket: `Pelunasan Corporate: ${currentTagihan.nama} (Inv: ${currentTagihan.noInvoice || '-'})`,
+      jumlah: currentTagihan.totalHarga,
+      isAuto: true, 
+      refId: currentTagihan.id,
+      bukti: ""
+    });
+  } else if (value === 'Down Payment') {
+    let currentDP = currentTagihan.dpNominal || 0;
+    let inputDP = prompt(`Masukkan Jumlah Down Payment (DP) untuk ${currentTagihan.nama}:`, currentDP);
+    
+    if (inputDP !== null) {
+      let parsedDP = parseInt(inputDP) || 0;
+      if (parsedDP > currentTagihan.totalHarga) {
+        alert("Jumlah DP tidak boleh melebihi total harga!");
+        currentTagihan.status = 'Belum Lunas';
+        currentTagihan.sisaPelunasan = currentTagihan.totalHarga;
+      } else {
+        currentTagihan.dpNominal = parsedDP;
+        currentTagihan.sisaPelunasan = currentTagihan.totalHarga - parsedDP;
+        
+        keuangan = keuangan.filter(k => !(k.isAuto === true && k.refId === currentTagihan.id));
+        
+        let tglHariIni = new Date().toISOString().split('T')[0];
+        keuangan.push({
+          tgl: tglHariIni,
+          jenis: 'in',
+          project: `${currentTagihan.nama} (${currentTagihan.lokasi || '-'})`,
+          ket: `DP Corporate: ${currentTagihan.nama} (Inv: ${currentTagihan.noInvoice || '-'})`,
+          jumlah: parsedDP,
+          isAuto: true,
+          refId: currentTagihan.id,
+          bukti: ""
+        });
+      }
+    } else {
+      currentTagihan.status = 'Belum Lunas';
+      currentTagihan.sisaPelunasan = currentTagihan.totalHarga;
     }
   } else {
-    keuangan = keuangan.filter(k => {
-      if (k.isAuto === true && k.refId === currentTagihan.id) {
-        return false; 
-      }
-      return true; 
-    });
+    currentTagihan.sisaPelunasan = currentTagihan.totalHarga;
+    currentTagihan.dpNominal = 0;
+    keuangan = keuangan.filter(k => !(k.isAuto === true && k.refId === currentTagihan.id));
   }
 
   saveAndSync();
@@ -466,12 +552,7 @@ function del(i, tipe){
   }
   if(tipe=='t') {
     let targetId = tagihan[i].id;
-    keuangan = keuangan.filter(k => {
-      if (k.isAuto === true && k.refId === targetId) {
-        return false;
-      }
-      return true;
-    });
+    keuangan = keuangan.filter(k => !(k.isAuto === true && k.refId === targetId));
     tagihan.splice(i,1);
   } 
   saveAndSync(); 
@@ -523,7 +604,7 @@ function renderPengeluaranProject() {
 }
 
 function render(){
-  // Render Keuangan dengan Bukti
+  // Render Keuangan
   let listK = document.getElementById('listKeuangan'); listK.innerHTML=''; let totalIn=0, totalOut=0;
   keuangan.forEach((e,i)=>{ 
     let badgeStyle = e.isAuto ? 'background:#E8F5E9; color:#007a3d; padding:2px 6px; border-radius:4px; font-size:11px;' : '';
@@ -546,7 +627,7 @@ function render(){
     if(e.jenis=='in') totalIn+=e.jumlah; else totalOut+=e.jumlah;
   });
   
-  // Render MCU dengan Catatan & Edit Kustom Total
+  // Render Data MCU
   let listM = document.getElementById('listMCU'); listM.innerHTML='';
   mcu.forEach((e,i)=>{ 
     let itemsString = e.items && e.items.length > 0 ? e.items.join(', ') : '-';
@@ -563,13 +644,16 @@ function render(){
       <td>${e.perusahaan}</td>
       <td>${e.lokasi || '-'}</td>
       <td>${e.tgl}</td>
-      <td>${itemsString}</td>
+      <td>
+        <div>${itemsString}</div>
+        <button class="btn-ket" style="background:#00A651;" onclick="editItemMcu(${i})">Edit Item</button>
+      </td>
       <td>Rp ${hargaPerPasien.toLocaleString()}</td>
       <td>${jmlPasien}</td>
       <td><strong>Rp ${totalHarga.toLocaleString()}</strong>${labelEdited}</td>
       <td>
-         <div>${isiKet}</div>
-         <button class="btn-ket" onclick="updateKeteranganMcu(${i})">${textTombolKet}</button>
+          <div>${isiKet}</div>
+          <button class="btn-ket" onclick="updateKeteranganMcu(${i})">${textTombolKet}</button>
       </td>
       <td>
         <button class="btn-edit" onclick="editTotalMcu(${i})">Edit Total</button>
@@ -578,7 +662,7 @@ function render(){
     </tr>`;
   });
 
-  // Render Tagihan
+  // Render Tagihan dengan Perbaikan Posisi Berkas Sesuai Permintaan
   let listT = document.getElementById('listTagihan'); listT.innerHTML=''; let totalPiutang=0;
   tagihan.forEach((e,i)=>{
     let tglJatuhTempoStr = "-";
@@ -591,32 +675,59 @@ function render(){
       tglJatuhTempoStr = `${dd}-${mm}-${yyyy}`;
     }
 
-    let lampiranHTML = "-";
+    // 1. Soft Invoice pindah ke kolom No. Invoice
+    let lampiranHTML = "";
     if(e.lampiran) {
-      lampiranHTML = `<a href="${e.lampiran}" target="_blank" class="btn-view">Lihat File</a>`;
+      lampiranHTML = `<br><a href="${e.lampiran}" target="_blank" class="btn-view">Lihat Soft Invoice</a>`;
+    } else {
+      lampiranHTML = `
+        <div style="margin-top:5px;">
+          <span style="font-size:11px;color:#999;display:block;">No Soft Invoice</span>
+          <input type="file" class="file-upload-table" accept="image/*,application/pdf" onchange="uploadSoftInvoiceTable(${i}, this)">
+        </div>`;
     }
 
-    let isLunas = e.status === 'Lunas';
+    // 2. Bukti Kirim murni di kolom Tgl Kirim & Bukti Kirim
+    let buktiKirimHTML = "";
+    if(e.buktiKirim) {
+      buktiKirimHTML = `<br><a href="${e.buktiKirim}" target="_blank" class="btn-view-bukti">Lihat Bukti Kirim</a>`;
+    } else {
+      buktiKirimHTML = `
+        <div style="margin-top:5px;">
+          <span style="font-size:11px;color:#999;display:block;">Belum kirim file</span>
+          <input type="file" class="file-upload-table" accept="image/*,application/pdf" onchange="uploadBuktiKirimTable(${i}, this)">
+        </div>`;
+    }
+
+    let statusClass = 'belum';
+    if(e.status === 'Lunas') statusClass = 'lunas';
+    if(e.status === 'Down Payment') statusClass = 'dp-status';
+
     let selectStatusHTML = `
-      <select onchange="updateStatus(${i}, this.value)" class="select-status ${isLunas ? 'lunas' : 'belum'}">
-        <option value="Belum Lunas" ${!isLunas ? 'selected' : ''}>Belum Lunas</option>
-        <option value="Lunas" ${isLunas ? 'selected' : ''}>Lunas</option>
+      <select onchange="updateStatus(${i}, this.value)" class="select-status ${statusClass}">
+        <option value="Belum Lunas" ${e.status === 'Belum Lunas' ? 'selected' : ''}>Belum Lunas</option>
+        <option value="Down Payment" ${e.status === 'Down Payment' ? 'selected' : ''}>Down Payment</option>
+        <option value="Lunas" ${e.status === 'Lunas' ? 'selected' : ''}>Lunas</option>
       </select>
     `;
 
+    let sisaPelunasanVal = e.sisaPelunasan !== undefined ? e.sisaPelunasan : e.totalHarga;
+    let dpLabel = e.status === 'Down Payment' ? `<br><span style="font-size:11px; color:#FF9800;">DP: Rp ${(e.dpNominal || 0).toLocaleString()}</span>` : '';
+
     listT.innerHTML += `<tr>
       <td><strong>${e.nama}</strong><br><span style="font-size:11px;color:#666;">Project: ${e.lokasi || '-'}</span></td>
-      <td>${e.noInvoice || '-'}</td>
-      <td>${e.tglKirim ? e.tglKirim : '-'} <br> ${lampiranHTML}</td>
+      <td><strong>${e.noInvoice || '-'}</strong>${lampiranHTML}</td>
+      <td>${e.tglKirim ? e.tglKirim : '-'} ${buktiKirimHTML}</td>
       <td>${e.durasi} Hari</td>
-      <td><strong>Rp ${(e.totalHarga || 0).toLocaleString()}</strong></td>
+      <td><strong>Rp ${(e.totalHarga || 0).toLocaleString()}</strong>${dpLabel}</td>
+      <td><strong style="color:#d32f2f;">Rp ${sisaPelunasanVal.toLocaleString()}</strong></td>
       <td>${tglJatuhTempoStr}</td>
       <td>${selectStatusHTML}</td>
       <td><button class="btn-del" onclick="del(${i},'t')">Hapus</button></td>
     </tr>`;
 
     if(e.status !== 'Lunas') {
-      totalPiutang += (e.totalHarga || 0);
+      totalPiutang += sisaPelunasanVal;
     }
   });
 
