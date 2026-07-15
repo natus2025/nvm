@@ -736,6 +736,9 @@ optionsHTML = e.keterangan ? 'Ubah Ket.' : '+ Tambahkan Keterangan';
     `;
 
     let sisaPelunasanVal = e.sisaPelunasan !== undefined ? e.sisaPelunasan : e.totalHarga;
+    if (e.status === 'Lunas') {
+      sisaPelunasanVal = 0;
+    }
     let dpLabel = e.status === 'Down Payment' ? `<br><span style="font-size:11px; color:#FF9800;">DP: Rp ${(e.dpNominal || 0).toLocaleString()}</span>` : '';
 
     listT.innerHTML += `<tr>
