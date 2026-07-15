@@ -61,6 +61,7 @@ th { background:#00A651; color:white; }
   <button class="tab" onclick="showTab('penagihan')">2. Penagihan Corporate</button>
   <button class="tab" onclick="showTab('keuangan')">3. Keuangan</button>
   <button class="tab" onclick="showTab('pengeluaran-project')">4. Pengeluaran per-Project</button>
+  <button class="tab" onclick="showTab('laporan-bulanan')">5. Laporan Bulanan</button> <!-- Tambahkan ini -->
 </div>
 
 <!-- TAB MCU (TAB 1) -->
@@ -208,6 +209,22 @@ th { background:#00A651; color:white; }
   </table>
 </div>
 
+<!-- TAB LAPORAN BULANAN (TAB 5) -->
+<div id="laporan-bulanan" class="tab-content" style="display:none">
+  <h3>Rangkuman Laporan Keuangan Bulanan</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Bulan - Tahun</th>
+        <th>Total Project</th>
+        <th>Total Pemasukan (Rp)</th>
+        <th>Total Pengeluaran (Rp)</th>
+      </tr>
+    </thead>
+    <tbody id="listLaporanBulanan"></tbody>
+  </table>
+</div>
+
 </div>
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyehOwZZ0H8UDOcI4SgGpSvhOtdJyseBYpBYXzke_c8SSrc79PCqoUh38F6oc1E9FYSeA/exec";
@@ -247,14 +264,15 @@ function showTab(tab) {
   document.querySelectorAll('.tab-content').forEach(e=>e.style.display='none');
   document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
   document.getElementById(tab).style.display='block';
-  if(event && event.target && event.target.classList.contains('tab')) {
-    event.target.classList.add('active');
-  }
+  if(event) event.target.classList.add('active');
   
   populateMcuDropdowns();
   
   if (tab === 'pengeluaran-project') {
     renderPengeluaranProject();
+  }
+  if (tab === 'laporan-bulanan') { // Tambahkan kondisi ini
+    renderLaporanBulanan();
   }
 }
 
@@ -619,6 +637,66 @@ function renderPengeluaranProject() {
       <td><strong>${e.perusahaan}</strong></td>
       <td>${e.lokasi || '-'}</td>
       <td><strong>Rp ${totalProjectOut.toLocaleString()}</strong></td>
+    </tr>`;
+  });
+}
+
+function renderLaporanBulanan() {
+  let listL = document.getElementById('listLaporanBulanan');
+  listL.innerHTML = '';
+
+  // Objek penampung data yang dikelompokkan berdasarkan YYYY-MM
+  let laporanData = {};
+
+  // 1. Hitung Total Project MCU per Bulan berdasarkan Tgl. Pelaksanaan MCU
+  mcu.forEach(e => {
+    if (!e.tgl) return;
+    let blnThn = e.tgl.substring(0, 7); // Mengambil format "YYYY-MM"
+    if (!laporanData[blnThn]) {
+      laporanData[blnThn] = { totalProject: 0, pemasukan: 0, pengeluaran: 0 };
+    }
+    laporanData[blnThn].totalProject += 1;
+  });
+
+  // 2. Hitung Pemasukan dan Pengeluaran per Bulan berdasarkan Tanggal Transaksi
+  keuangan.forEach(k => {
+    if (!k.tgl) return;
+    let blnThn = k.tgl.substring(0, 7); // Mengambil format "YYYY-MM"
+    if (!laporanData[blnThn]) {
+      laporanData[blnThn] = { totalProject: 0, pemasukan: 0, pengeluaran: 0 };
+    }
+    
+    if (k.jenis === 'in') {
+      laporanData[blnThn].pemasukan += (k.jumlah || 0);
+    } else if (k.jenis === 'out') {
+      laporanData[blnThn].pengeluaran += (k.jumlah || 0);
+    }
+  });
+
+  // Ambil semua key bulan-tahun, urutkan dari yang terbaru
+  let sortedKeys = Object.keys(laporanData).sort().reverse();
+
+  if (sortedKeys.length === 0) {
+    listL.innerHTML = '<tr><td colspan="4" style="text-align:center;">Tidak ada data keuangan untuk dibuat laporan.</td></tr>';
+    return;
+  }
+
+  // Nama-nama bulan dalam Bahasa Indonesia
+  const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+  sortedKeys.forEach(key => {
+    let parts = key.split('-');
+    let tahun = parts[0];
+    let bulanIndex = parseInt(parts[1]) - 1;
+    let labelBulan = `${namaBulan[bulanIndex]} ${tahun}`;
+
+    let data = laporanData[key];
+
+    listL.innerHTML += `<tr>
+      <td><strong>${labelBulan}</strong></td>
+      <td>${data.totalProject} Project</td>
+      <td style="color:#007a3d; font-weight:bold;">Rp ${data.pemasukan.toLocaleString()}</td>
+      <td style="color:#d32f2f; font-weight:bold;">Rp ${data.pengeluaran.toLocaleString()}</td>
     </tr>`;
   });
 }
