@@ -491,8 +491,11 @@ function addTagihan() {
   let file = fileInput.files[0];
   
   let idTagihan = 'inv_' + Date.now(); 
+  
+  // PERBAIKAN: Mengambil totalHarga yang sudah mencakup penyesuaian (customTotal) di Tab 1
   let calculatedTotal = selectedMcu.customTotal !== undefined ? selectedMcu.customTotal : ((selectedMcu.harga || 0) * (selectedMcu.jumlah || 0));
   
+  // Jika PPN 11% dicentang, hitung PPN dari harga dasar yang sudah benar
   if(document.getElementById('ppnCheck').checked) {
     calculatedTotal = Math.round(calculatedTotal * 1.11);
   }
