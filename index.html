@@ -330,8 +330,15 @@ function toggleJenisPengeluaran() {
   }
 }
 
+// ==========================================
+// PERBARUAN: Fitur Auto Clear Cache Tiap Reload
+// ==========================================
 async function loadDataFromSpreadsheet() {
   try {
+    // Bersihkan seluruh localStorage untuk membuang cache lama sebelum fetch data baru
+    localStorage.clear();
+    console.log("Cache lokal (localStorage) berhasil dibersihkan untuk sinkronisasi segar.");
+
     document.getElementById('totalIn').innerText = 'Loading...';
     
     let response = await fetch(SCRIPT_URL);
@@ -347,7 +354,7 @@ async function loadDataFromSpreadsheet() {
       localStorage.setItem('klinik_tagihan', JSON.stringify(tagihan));
     }
   } catch (error) {
-    console.error("Gagal memuat data dari awan, beralih ke penyimpanan lokal:", error);
+    console.error("Gagal memuat data dari awan, mencoba memulihkan session terakhir:", error);
     keuangan = JSON.parse(localStorage.getItem('klinik_keuangan')) || [];
     mcu = JSON.parse(localStorage.getItem('klinik_mcu')) || [];
     tagihan = JSON.parse(localStorage.getItem('klinik_tagihan')) || [];
@@ -472,13 +479,11 @@ function removeBuktiKeuanganTable(index) {
   }
 }
 
-// FUNGSI BARU: Fungsi Aksi untuk memicu filter data Keuangan live
 function filterKeuanganData() {
-  pageKeuangan = 1; // Kembalikan ke halaman pertama setiap kali memfilter data baru
+  pageKeuangan = 1; 
   render();
 }
 
-// FUNGSI BARU: Reset panel pencarian keuangan kembali kosong semula
 function resetKeuanganFilter() {
   document.getElementById('searchKeuanganText').value = '';
   document.getElementById('filterKeuanganTglMulai').value = '';
@@ -640,7 +645,6 @@ function changePageTagihan(page) {
   render();
 }
 
-// Fungsi Trigger Perubahan Pagination Keuangan
 function changeLimitKeuangan(val) {
   limitKeuangan = val === 'all' ? 'all' : parseInt(val);
   pageKeuangan = 1;
@@ -651,6 +655,7 @@ function changePageKeuangan(page) {
   render();
 }
 
+/* Edit Item MCU */
 function editItemMcu(index) {
   let currentMcu = mcu[index];
   let currentItems = currentMcu.items && currentMcu.items.length > 0 ? currentMcu.items.join(', ') : '';
@@ -844,20 +849,22 @@ function updateStatus(index, value) {
 }
 
 function del(i, tipe){ 
-  if(tipe=='k') {
-    keuangan.splice(i,1); 
+  if(confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+    if(tipe=='k') {
+      keuangan.splice(i,1); 
+    }
+    if(tipe=='m') {
+      mcu.splice(i,1); 
+    }
+    if(tipe=='t') {
+      let targetId = tagihan[i].id;
+      keuangan = keuangan.filter(k => !(k.isAuto === true && k.refId === targetId));
+      tagihan.splice(i,1);
+    } 
+    saveAndSync(); 
+    populateMcuDropdowns();
+    render(); 
   }
-  if(tipe=='m') {
-    mcu.splice(i,1); 
-  }
-  if(tipe=='t') {
-    let targetId = tagihan[i].id;
-    keuangan = keuangan.filter(k => !(k.isAuto === true && k.refId === targetId));
-    tagihan.splice(i,1);
-  } 
-  saveAndSync(); 
-  populateMcuDropdowns();
-  render(); 
 }
 
 function saveAndSync(){
@@ -993,54 +1000,43 @@ function renderLaporanBulanan() {
 }
 
 function render(){
-  // 3. PAGINATION & RENDER KEUANGAN DENGAN PENGAPLIKASIAN SEARCH DAN FILTER LIVE
   let listK = document.getElementById('listKeuangan'); listK.innerHTML=''; let totalIn=0, totalOut=0;
   
   let indexedKeuangan = keuangan.map((item, originalIndex) => ({ ...item, originalIndex }));
   indexedKeuangan.sort((a, b) => new Date(a.tgl || 0) - new Date(b.tgl || 0));
   
-  // Hitung Total Global awal
   indexedKeuangan.forEach(e => {
     if(e.jenis=='in') totalIn+=e.jumlah; else totalOut+=e.jumlah;
   });
 
-  // PEMBARUAN: Tangkap nilai komponen filter pencarian dari UI
   let searchTxt = document.getElementById('searchKeuanganText') ? document.getElementById('searchKeuanganText').value.toLowerCase() : "";
   let filterTglMulai = document.getElementById('filterKeuanganTglMulai') ? document.getElementById('filterKeuanganTglMulai').value : "";
   let filterTglSelesai = document.getElementById('filterKeuanganTglSelesai') ? document.getElementById('filterKeuanganTglSelesai').value : "";
   let filterJenis = document.getElementById('filterKeuanganJenis') ? document.getElementById('filterKeuanganJenis').value : "all";
   let filterKategori = document.getElementById('filterKeuanganKategori') ? document.getElementById('filterKeuanganKategori').value : "all";
 
-  // PEMBARUAN: Jalankan Logika Penyaringan (Filtering Data)
   let filteredKeuangan = indexedKeuangan.filter(e => {
-    // 1. Filter Text Pencarian (Project / Keterangan)
     if (searchTxt && !e.project.toLowerCase().includes(searchTxt) && !e.ket.toLowerCase().includes(searchTxt)) {
       return false;
     }
-    // 2. Filter Tanggal Mulai
     if (filterTglMulai && e.tgl < filterTglMulai) {
       return false;
     }
-    // 3. Filter Tanggal Selesai
     if (filterTglSelesai && e.tgl > filterTglSelesai) {
       return false;
     }
-    // 4. Filter Jenis Transaksi
     if (filterJenis !== 'all' && e.jenis !== filterJenis) {
       return false;
     }
-    // 5. Filter Kategori Pengeluaran
     let kategoriSaatIni = e.jenisPengeluaran ? e.jenisPengeluaran : (e.jenis === 'out' ? 'Operational' : '-');
     if(kategoriSaatIni === 'Operasional') kategoriSaatIni = 'Operational';
     
     if (filterKategori !== 'all' && kategoriSaatIni !== filterKategori) {
       return false;
     }
-
     return true;
   });
 
-  // Pemotongan data per halaman dari data yang lolos filter
   let displayedKeuangan = [];
   if (limitKeuangan === 'all') {
     displayedKeuangan = filteredKeuangan;
@@ -1099,7 +1095,6 @@ function render(){
   
   createPaginationUI('paginationKeuangan', filteredKeuangan.length, limitKeuangan, pageKeuangan, 'changeLimitKeuangan', 'changePageKeuangan');
 
-  // 1. PAGINATION & RENDER DATA MCU
   let listM = document.getElementById('listMCU'); listM.innerHTML='';
   
   let indexedMcu = mcu.map((item, originalIndex) => ({ ...item, originalIndex }));
@@ -1163,7 +1158,6 @@ function render(){
 
   createPaginationUI('paginationMcu', mcu.length, limitMcu, pageMcu, 'changeLimitMcu', 'changePageMcu');
 
-  // 2. PAGINATION & RENDER PENAGIHAN/TAGIHAN
   let listT = document.getElementById('listTagihan'); listT.innerHTML=''; let totalPiutang=0;
   
   let indexedTagihan = tagihan.map((item, originalIndex) => ({ ...item, originalIndex }));
