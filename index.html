@@ -3634,7 +3634,7 @@ function render() {
         <tr>
 
           <td>
-            ${e.tgl || '-'}
+            ${formatTanggal(e.tgl)}
           </td>
 
           <td>
@@ -3866,7 +3866,7 @@ function render() {
           </td>
 
           <td>
-            ${e.tgl || '-'}
+            ${formatTanggal(e.tgl)}
           </td>
 
           <td>
@@ -4458,11 +4458,7 @@ function render() {
 
           <td>
 
-            ${
-              e.tglKirim
-              ? e.tglKirim
-              : '-'
-            }
+            ${formatTanggal(e.tglKirim)}
 
             ${buktiKirimHTML}
 
@@ -4579,6 +4575,30 @@ function updateTableKategoriKeuangan(
 
 }
 
+/* ===============================
+   HELPER TANGGAL
+================================ */
+
+// Fungsi untuk konversi ke format DD-MM-YYYY (Waktu Indonesia)
+function formatTanggal(tanggal) {
+  if (!tanggal) return "-";
+  
+  // Jika berisi waktu (ISO), ambil hanya bagian tanggal & sesuaikan zona waktu
+  const date = new Date(tanggal);
+  // Ambil tanggal dalam zona waktu lokal (Indonesia)
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  
+  return `${dd}-${mm}-${yyyy}`;
+}
+
+function parseTanggal(tanggal) {
+  if (!tanggal) {
+    return 0;
+  }
+  return new Date(tanggal).getTime() || 0;
+}
 
 /* ===============================
    START
