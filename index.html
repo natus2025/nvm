@@ -390,21 +390,66 @@ function showTab(tab) {
 function populateMcuDropdowns() {
   let selectTagihan = document.getElementById('selectMcuClient');
   let selectKeuangan = document.getElementById('projectKeuangan');
-  
-  let optionsHTML = '<option value="">-- Pilih Client MCU --</option>';
-  let sortedMcu = [...mcu].sort((a, b) => new Date(a.tgl || 0) - new Date(b.tgl || 0));
-  let registeredInvoices = tagihan.map(t => `${t.nama} (${t.lokasi || '-'})`);
+
+  // Urutkan project berdasarkan tanggal MCU
+  let sortedMcu = [...mcu].sort((a, b) => {
+    return new Date(a.tgl || 0) - new Date(b.tgl || 0);
+  });
+
+  // ==============================
+  // DROPDOWN TAB 2 - PENAGIHAN
+  // Hanya menampilkan project yang BELUM memiliki invoice
+  // ==============================
+  let registeredInvoices = tagihan.map(t =>
+    `${t.nama} (${t.lokasi || '-'})`
+  );
+
+  let optionsTagihanHTML =
+    '<option value="">-- Pilih Client MCU --</option>';
 
   sortedMcu.forEach((e) => {
     let identifier = `${e.perusahaan} (${e.lokasi || '-'})`;
+
+    // Hanya project yang belum ada invoice
     if (!registeredInvoices.includes(identifier)) {
-      let total = e.customTotal !== undefined ? e.customTotal : ((e.harga || 0) * (e.jumlah || 0));
-      optionsHTML += `<option value="${e.perusahaan} (${e.lokasi || '-'})">${e.perusahaan} (${e.lokasi || '-'}) - Rp ${total.toLocaleString()}</option>`;
+      let total = e.customTotal !== undefined
+        ? e.customTotal
+        : ((e.harga || 0) * (e.jumlah || 0));
+
+      optionsTagihanHTML += `
+        <option value="${identifier}">
+          ${identifier} - Rp ${total.toLocaleString()}
+        </option>
+      `;
     }
   });
-  
-  selectTagihan.innerHTML = optionsHTML;
-  selectKeuangan.innerHTML = optionsHTML;
+
+  selectTagihan.innerHTML = optionsTagihanHTML;
+
+
+  // ==============================
+  // DROPDOWN TAB 3 - KEUANGAN
+  // SEMUA PROJECT MCU DITAMPILKAN
+  // TERMASUK YANG SUDAH ADA INVOICE
+  // ==============================
+  let optionsKeuanganHTML =
+    '<option value="">-- Pilih Project MCU --</option>';
+
+  sortedMcu.forEach((e) => {
+    let identifier = `${e.perusahaan} (${e.lokasi || '-'})`;
+
+    let total = e.customTotal !== undefined
+      ? e.customTotal
+      : ((e.harga || 0) * (e.jumlah || 0));
+
+    optionsKeuanganHTML += `
+      <option value="${identifier}">
+        ${identifier} - Rp ${total.toLocaleString()}
+      </option>
+    `;
+  });
+
+  selectKeuangan.innerHTML = optionsKeuanganHTML;
 }
 
 function addKeuangan() {
