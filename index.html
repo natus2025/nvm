@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Tracking - PT. Natus Vincere Medika</title>
+<title>Sistem Tracking Keuangan & Penagihan</title>
 
 <style>
 body {
@@ -90,6 +91,7 @@ td {
   border:1px solid #ddd;
   padding:8px;
   text-align:left;
+  vertical-align:middle;
 }
 
 th {
@@ -379,36 +381,25 @@ th {
 .btn-reset-filter:hover {
   background:#616161;
 }
-
-@media(max-width:768px) {
-  .container {
-    padding:10px;
-  }
-
-  table {
-    display:block;
-    overflow-x:auto;
-    white-space:nowrap;
-  }
-
-  .summary {
-    grid-template-columns:1fr;
-  }
-}
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-<div class="logo">
-  PT. NATUS VINCERE MEDIKA
+<div class="logo" id="logoNama">PT. NATUS VINCERE MEDIKA</div>
+
+<div style="text-align:center;margin-bottom:15px;">
+  <label class="small-text" style="display:inline-block;margin-right:8px;">🏢 Pilih Database:</label>
+  <select id="dbSwitcher" onchange="switchDatabase(this.value)" style="padding:9px 14px;border-radius:8px;border:1px solid #ccc;font-weight:bold;font-size:14px;">
+    <option value="andini">Klinik Pratama Andini</option>
+    <option value="nvm">PT. Natus Vincere Medika</option>
+  </select>
 </div>
 
-<h1>
-  📊 Sistem Tracking Keuangan & Penagihan
-</h1>
+<h1>📊 Sistem Tracking Keuangan & Penagihan</h1>
 
 <div class="summary">
   <div class="card in">
@@ -449,161 +440,66 @@ th {
   </button>
 </div>
 
-<!-- ================= TAB MCU ================= -->
+<!-- ================= TAB 1 MCU ================= -->
 
 <div id="mcu" class="tab-content">
 
 <h3>Data Pasien MCU Corporate</h3>
 
-<div class="form" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));">
+<div class="form" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
 
 <div>
 <label class="small-text">Nama Client</label>
-<input
-type="text"
-id="perusahaan"
-placeholder="Nama Client"
-style="width:100%;box-sizing:border-box;">
+<input type="text" id="perusahaan" placeholder="Nama Client" style="width:100%;box-sizing:border-box;">
 </div>
 
 <div>
 <label class="small-text">Nama / Lokasi Project</label>
-<input
-type="text"
-id="lokasiProject"
-placeholder="Nama/Lokasi Project"
-style="width:100%;box-sizing:border-box;">
+<input type="text" id="lokasiProject" placeholder="Nama/Lokasi Project" style="width:100%;box-sizing:border-box;">
 </div>
 
 <div>
 <label class="small-text">Tgl. Pelaksanaan MCU</label>
-<input
-type="date"
-id="tglMCU"
-style="width:100%;box-sizing:border-box;">
+<input type="date" id="tglMCU" style="width:100%;box-sizing:border-box;">
 </div>
 
 <div>
+<label class="small-text">Item Pemeriksaan</label>
 
-<label class="small-text">
-Item Pemeriksaan
-</label>
+<div class="checkbox-group" id="itemPemeriksaan">
 
-<div
-class="checkbox-group"
-id="itemPemeriksaan">
-
-<label>
-<input type="checkbox" value="Rontgen">
-Rontgen
-</label>
-
-<label>
-<input type="checkbox" value="USG Abdomen">
-USG Abdomen
-</label>
-
-<label>
-<input type="checkbox" value="USG Mammae">
-USG Mammae
-</label>
-
-<label>
-<input type="checkbox" value="EKG">
-EKG
-</label>
-
-<label>
-<input type="checkbox" value="Treadmill Test">
-Treadmill Test
-</label>
-
-<label>
-<input type="checkbox" value="Spirometri">
-Spirometri
-</label>
-
-<label>
-<input type="checkbox" value="Audiometri">
-Audiometri
-</label>
-
-<label>
-<input type="checkbox" value="Autorefrak">
-Autorefrak
-</label>
-
-<label>
-<input type="checkbox" value="Fisik Dokter">
-Fisik Dokter
-</label>
-
-<label>
-<input type="checkbox" value="Laboratorium">
-Laboratorium
-</label>
+<label><input type="checkbox" value="Rontgen"> Rontgen</label> <label><input type="checkbox" value="USG Abdomen"> USG Abdomen</label> <label><input type="checkbox" value="USG Mammae"> USG Mammae</label> <label><input type="checkbox" value="EKG"> EKG</label> <label><input type="checkbox" value="Treadmill Test"> Treadmill Test</label> <label><input type="checkbox" value="Spirometri"> Spirometri</label> <label><input type="checkbox" value="Audiometri"> Audiometri</label> <label><input type="checkbox" value="Autorefrak"> Autorefrak</label> <label><input type="checkbox" value="Fisik Dokter"> Fisik Dokter</label> <label><input type="checkbox" value="Laboratorium"> Laboratorium</label>
 
 </div>
 </div>
 
 <div>
-<label class="small-text">
-Harga per Pasien (Rp)
-</label>
-
-<input
-type="number"
-id="hargaProject"
-placeholder="Harga/Pasien"
-style="width:100%;box-sizing:border-box;">
+<label class="small-text">Harga per Pasien (Rp)</label>
+<input type="number" id="hargaProject" placeholder="Harga/Pasien" style="width:100%;box-sizing:border-box;">
 </div>
 
 <div>
-<label class="small-text">
-Jumlah Pasien
-</label>
-
-<input
-type="number"
-id="jmlPasien"
-placeholder="Jumlah Pasien"
-style="width:100%;box-sizing:border-box;">
+<label class="small-text">Jumlah Pasien</label>
+<input type="number" id="jmlPasien" placeholder="Jumlah Pasien" style="width:100%;box-sizing:border-box;">
 </div>
 
 <div>
-<label class="small-text">
-Nominal RAB (Rp)
-</label>
-
-<input
-type="number"
-id="rabProject"
-placeholder="Nominal RAB"
-style="width:100%;box-sizing:border-box;">
+<label class="small-text">Nominal RAB (Rp)</label>
+<input type="number" id="rabProject" placeholder="Nominal RAB" style="width:100%;box-sizing:border-box;">
 </div>
 
 <div>
-<label class="small-text">
-Nominal Fee MCU (Rp)
-</label>
-
-<input
-type="number"
-id="feeMCU"
-placeholder="Nominal Fee MCU"
-style="width:100%;box-sizing:border-box;">
+<label class="small-text">Nominal Fee MCU (Rp)</label>
+<input type="number" id="feeMCU" placeholder="Nominal Fee MCU" style="width:100%;box-sizing:border-box;">
 </div>
 
-<button onclick="addMCU()">
-+ Simpan
-</button>
+<button onclick="addMCU()">+ Simpan</button>
 
 </div>
 
 <table>
 
 <thead>
-
 <tr>
 <th>Nama Client</th>
 <th>Nama/Lokasi Project</th>
@@ -617,138 +513,74 @@ style="width:100%;box-sizing:border-box;">
 <th>Keterangan</th>
 <th>Aksi</th>
 </tr>
-
 </thead>
 
 <tbody id="listMCU"></tbody>
 
 </table>
 
-<div
-class="pagination-container"
-id="paginationMcu">
-</div>
+<div class="pagination-container" id="paginationMcu"></div>
 
 </div>
 
-<!-- ================= TAB PENAGIHAN ================= -->
+<!-- ================= TAB 2 PENAGIHAN ================= -->
 
-<div
-id="penagihan"
-class="tab-content"
-style="display:none">
+<div id="penagihan" class="tab-content" style="display:none">
 
-<h3>
-Tracking Penagihan Corporate
-</h3>
+<h3>Tracking Penagihan Corporate</h3>
 
-<div
-class="form"
-style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));">
+<div class="form" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
 
 <div>
+<label class="small-text">Pilih Client MCU</label>
 
-<label class="small-text">
-Pilih Client MCU
-</label>
-
-<select
-id="selectMcuClient"
-style="width:100%;">
-
-<option value="">
--- Pilih Client MCU --
-</option>
-
+<select id="selectMcuClient" style="width:100%;">
+<option value="">-- Pilih Client MCU --</option>
 </select>
-
 </div>
 
 <div>
 
-<div
-style="display:flex;justify-content:space-between;align-items:center;">
+<div style="display:flex;justify-content:space-between;align-items:center;">
 
-<label class="small-text">
-No. Invoice
-</label>
+<label class="small-text">No. Invoice</label>
 
 <label class="inline-checkbox">
-
-<input
-type="checkbox"
-id="ppnCheck">
-
+<input type="checkbox" id="ppnCheck">
 PPN 11%
-
 </label>
 
 </div>
 
-<input
-type="text"
-id="noInvoice"
-placeholder="No. Invoice"
-style="width:100%;box-sizing:border-box;margin-bottom:8px;">
+<input type="text" id="noInvoice" placeholder="No. Invoice" style="width:100%;box-sizing:border-box;margin-bottom:8px;">
 
-<label class="small-text">
-Upload Soft Invoice
-</label>
+<label class="small-text">Upload Soft Invoice</label>
 
-<input
-type="file"
-id="lampiranInvoice"
-accept="image/*,application/pdf"
-style="width:100%;box-sizing:border-box;">
+<input type="file" id="lampiranInvoice" accept="image/*,application/pdf" style="width:100%;box-sizing:border-box;">
 
 </div>
 
 <div>
-
-<label class="small-text">
-Tgl. Kirim Invoice
-</label>
-
-<input
-type="date"
-id="tglKirimInvoice"
-style="width:100%;box-sizing:border-box;">
-
+<label class="small-text">Tgl. Kirim Invoice</label>
+<input type="date" id="tglKirimInvoice" style="width:100%;box-sizing:border-box;">
 </div>
 
 <div>
 
-<label class="small-text">
-Durasi
-</label>
+<label class="small-text">Durasi</label>
 
-<select
-id="durasiInvoice"
-style="width:100%;">
+<select id="durasiInvoice" style="width:100%;">
 
-<option value="14">
-14 Hari
-</option>
-
-<option value="30">
-30 Hari
-</option>
-
-<option value="45">
-45 Hari
-</option>
-
-<option value="60">
-60 Hari
-</option>
+<option value="14">14 Hari</option>
+<option value="30">30 Hari</option>
+<option value="45">45 Hari</option>
+<option value="60">60 Hari</option>
 
 </select>
 
 </div>
 
-<button onclick="addTagihan()">
-+ Simpan
-</button>
+<button onclick="addTagihan()">+ Simpan</button>
 
 </div>
 
@@ -774,59 +606,30 @@ style="width:100%;">
 
 </table>
 
-<div
-class="pagination-container"
-id="paginationTagihan">
-</div>
+<div class="pagination-container" id="paginationTagihan"></div>
 
 </div>
 
-<!-- ================= TAB KEUANGAN ================= -->
+<!-- ================= TAB 3 KEUANGAN ================= -->
 
-<div
-id="keuangan"
-class="tab-content"
-style="display:none">
+<div id="keuangan" class="tab-content" style="display:none">
 
-<h3>
-Input Pemasukan / Pengeluaran
-</h3>
+<h3>Input Pemasukan / Pengeluaran</h3>
 
-<div
-class="form"
-style="grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));">
+<div class="form" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));">
 
 <div>
-
-<label class="small-text">
-Tanggal
-</label>
-
-<input
-type="date"
-id="tgl"
-style="width:100%;box-sizing:border-box;">
-
+<label class="small-text">Tanggal</label>
+<input type="date" id="tgl" style="width:100%;box-sizing:border-box;">
 </div>
 
 <div>
+<label class="small-text">Jenis</label>
 
-<label class="small-text">
-Jenis
-</label>
+<select id="jenis" style="width:100%" onchange="toggleJenisPengeluaran()">
 
-<select
-id="jenis"
-style="width:100%"
-onchange="toggleJenisPengeluaran()">
-
-<option value="in">
-Pemasukan
-</option>
-
-<option value="out">
-Pengeluaran
-</option>
+<option value="in">Pemasukan</option>
+<option value="out">Pengeluaran</option>
 
 </select>
 
@@ -834,17 +637,11 @@ Pengeluaran
 
 <div>
 
-<label class="small-text">
-Nama Project
-</label>
+<label class="small-text">Nama Project</label>
 
-<select
-id="projectKeuangan"
-style="width:100%;">
+<select id="projectKeuangan" style="width:100%;">
 
-<option value="">
--- Pilih Project MCU --
-</option>
+<option value="">-- Pilih Project MCU --</option>
 
 </select>
 
@@ -852,34 +649,15 @@ style="width:100%;">
 
 <div>
 
-<label class="small-text">
-Jenis Pengeluaran
-</label>
+<label class="small-text">Jenis Pengeluaran</label>
 
-<select
-id="jenisPengeluaran"
-style="width:100%;"
-disabled>
+<select id="jenisPengeluaran" style="width:100%;" disabled>
 
-<option value="-">
--
-</option>
-
-<option value="Operational">
-Operational
-</option>
-
-<option value="BMHP">
-BMHP
-</option>
-
-<option value="Fee Petugas & Dokter">
-Fee Petugas & Dokter
-</option>
-
-<option value="Sewa Alat">
-Sewa Alat
-</option>
+<option value="-">-</option>
+<option value="Operational">Operational</option>
+<option value="BMHP">BMHP</option>
+<option value="Fee Petugas & Dokter">Fee Petugas & Dokter</option>
+<option value="Sewa Alat">Sewa Alat</option>
 
 </select>
 
@@ -887,49 +665,29 @@ Sewa Alat
 
 <div>
 
-<label class="small-text">
-Keterangan / Penjelasan
-</label>
+<label class="small-text">Keterangan / Penjelasan</label>
 
-<input
-type="text"
-id="ket"
-placeholder="Beli Reagen / Operasional"
-style="width:100%;box-sizing:border-box;">
+<input type="text" id="ket" placeholder="Beli Reagen / Operasional" style="width:100%;box-sizing:border-box;">
 
 </div>
 
 <div>
 
-<label class="small-text">
-Jumlah (Rp)
-</label>
+<label class="small-text">Jumlah (Rp)</label>
 
-<input
-type="number"
-id="jumlah"
-placeholder="Jumlah Rp"
-style="width:100%;box-sizing:border-box;">
+<input type="number" id="jumlah" placeholder="Jumlah Rp" style="width:100%;box-sizing:border-box;">
 
 </div>
 
 <div>
 
-<label class="small-text">
-Bukti Transaksi
-</label>
+<label class="small-text">Bukti Transaksi (JPG/PDF)</label>
 
-<input
-type="file"
-id="buktiKeuangan"
-accept="image/jpeg,image/png,application/pdf"
-style="width:100%;box-sizing:border-box;">
+<input type="file" id="buktiKeuangan" accept="image/jpeg,image/png,application/pdf" style="width:100%;box-sizing:border-box;">
 
 </div>
 
-<button onclick="addKeuangan()">
-+ Simpan
-</button>
+<button onclick="addKeuangan()">+ Simpan</button>
 
 </div>
 
@@ -937,69 +695,37 @@ style="width:100%;box-sizing:border-box;">
 
 <div>
 
-<label class="small-text">
-Cari Nama Project / Ket.
-</label>
+<label class="small-text">Cari Nama Project / Ket.</label>
 
-<input
-type="text"
-id="searchKeuanganText"
-placeholder="Ketik kata kunci pencarian..."
-style="width:100%;box-sizing:border-box;"
-oninput="filterKeuanganData()">
+<input type="text" id="searchKeuanganText" placeholder="Ketik kata kunci..." style="width:100%;box-sizing:border-box;" oninput="filterKeuanganData()">
 
 </div>
 
 <div>
 
-<label class="small-text">
-Mulai Tanggal
-</label>
+<label class="small-text">Mulai Tanggal</label>
 
-<input
-type="date"
-id="filterKeuanganTglMulai"
-style="width:100%;box-sizing:border-box;"
-onchange="filterKeuanganData()">
+<input type="date" id="filterKeuanganTglMulai" style="width:100%;box-sizing:border-box;" onchange="filterKeuanganData()">
 
 </div>
 
 <div>
 
-<label class="small-text">
-Sampai Tanggal
-</label>
+<label class="small-text">Sampai Tanggal</label>
 
-<input
-type="date"
-id="filterKeuanganTglSelesai"
-style="width:100%;box-sizing:border-box;"
-onchange="filterKeuanganData()">
+<input type="date" id="filterKeuanganTglSelesai" style="width:100%;box-sizing:border-box;" onchange="filterKeuanganData()">
 
 </div>
 
 <div>
 
-<label class="small-text">
-Filter Jenis
-</label>
+<label class="small-text">Filter Jenis</label>
 
-<select
-id="filterKeuanganJenis"
-style="width:100%;"
-onchange="filterKeuanganData()">
+<select id="filterKeuanganJenis" style="width:100%;" onchange="filterKeuanganData()">
 
-<option value="all">
--- Semua Jenis --
-</option>
-
-<option value="in">
-Pemasukan
-</option>
-
-<option value="out">
-Pengeluaran
-</option>
+<option value="all">-- Semua Jenis --</option>
+<option value="in">Pemasukan</option>
+<option value="out">Pengeluaran</option>
 
 </select>
 
@@ -1007,49 +733,23 @@ Pengeluaran
 
 <div>
 
-<label class="small-text">
-Filter Kategori
-</label>
+<label class="small-text">Filter Kategori</label>
 
-<select
-id="filterKeuanganKategori"
-style="width:100%;"
-onchange="filterKeuanganData()">
+<select id="filterKeuanganKategori" style="width:100%;" onchange="filterKeuanganData()">
 
-<option value="all">
--- Semua Kategori --
-</option>
-
-<option value="-">
--
-</option>
-
-<option value="Operational">
-Operational
-</option>
-
-<option value="BMHP">
-BMHP
-</option>
-
-<option value="Fee Petugas & Dokter">
-Fee Petugas & Dokter
-</option>
-
-<option value="Sewa Alat">
-Sewa Alat
-</option>
+<option value="all">-- Semua Kategori --</option>
+<option value="-">-</option>
+<option value="Operational">Operational</option>
+<option value="BMHP">BMHP</option>
+<option value="Fee Petugas & Dokter">Fee Petugas & Dokter</option>
+<option value="Sewa Alat">Sewa Alat</option>
 
 </select>
 
 </div>
 
-<button
-class="btn-reset-filter"
-onclick="resetKeuanganFilter()">
-
+<button class="btn-reset-filter" onclick="resetKeuanganFilter()">
 Clear Filter
-
 </button>
 
 </div>
@@ -1063,7 +763,7 @@ Clear Filter
 <th>Jenis</th>
 <th>Nama Project</th>
 <th>Kategori</th>
-<th>Keterangan / Penjelasan</th>
+<th>Keterangan</th>
 <th>Jumlah</th>
 <th>Bukti</th>
 <th>Aksi</th>
@@ -1075,23 +775,15 @@ Clear Filter
 
 </table>
 
-<div
-class="pagination-container"
-id="paginationKeuangan">
-</div>
+<div class="pagination-container" id="paginationKeuangan"></div>
 
 </div>
 
-<!-- ================= TAB PENGELUARAN PROJECT ================= -->
+<!-- ================= TAB 4 ================= -->
 
-<div
-id="pengeluaran-project"
-class="tab-content"
-style="display:none">
+<div id="pengeluaran-project" class="tab-content" style="display:none">
 
-<h3>
-Rangkuman Pengeluaran per-Project
-</h3>
+<h3>Rangkuman Pengeluaran per-Project</h3>
 
 <table class="project-summary-table">
 
@@ -1101,15 +793,15 @@ Rangkuman Pengeluaran per-Project
 <th>No</th>
 <th>Nama Client</th>
 <th>Nama/Lokasi Project</th>
-<th>Nominal RAB (Rp)</th>
+<th>Nominal RAB</th>
 <th>Pengeluaran Operational + BMHP</th>
 <th>Selisih RAB</th>
-<th>Nominal Fee MCU (Rp)</th>
+<th>Nominal Fee MCU</th>
 <th>Pengeluaran Fee MCU</th>
 <th>Selisih Fee</th>
 <th>Total Pengeluaran</th>
 <th>Total Harga Invoice</th>
-<th>Margin MCU (Rp)</th>
+<th>Margin MCU</th>
 </tr>
 
 </thead>
@@ -1120,16 +812,11 @@ Rangkuman Pengeluaran per-Project
 
 </div>
 
-<!-- ================= TAB LAPORAN BULANAN ================= -->
+<!-- ================= TAB 5 ================= -->
 
-<div
-id="laporan-bulanan"
-class="tab-content"
-style="display:none">
+<div id="laporan-bulanan" class="tab-content" style="display:none">
 
-<h3>
-Rangkuman Laporan Keuangan Bulanan
-</h3>
+<h3>Rangkuman Laporan Keuangan Bulanan</h3>
 
 <table>
 
@@ -1138,8 +825,8 @@ Rangkuman Laporan Keuangan Bulanan
 <tr>
 <th>Bulan - Tahun</th>
 <th>Total Project</th>
-<th>Total Pemasukan (Rp)</th>
-<th>Total Pengeluaran (Rp)</th>
+<th>Total Pemasukan</th>
+<th>Total Pengeluaran</th>
 </tr>
 
 </thead>
@@ -1155,7 +842,16 @@ Rangkuman Laporan Keuangan Bulanan
 <script>
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbxvvDeCw1K0JHLwd83J_yFT_Egl1s4-h_6lKVfgaDwSg0kbgEy9QcGMa_Wao9iGnPGd/exec";
+"https://script.google.com/macros/s/AKfycbw_a68JkaPNXt5JDw-FZcV_HfWR6mOunvn2nenfsN3a7jGDU42Yl1TcpNsPxk_9xSelxA/exec";
+
+const DB_LABELS = {
+  andini: "KLINIK PRATAMA ANDINI",
+  nvm: "PT. NATUS VINCERE MEDIKA"
+};
+
+// INITIAL DB SETTING PLACEHOLDER
+let currentDb = 'nvm';
+localStorage.setItem('activeDb', 'nvm');
 
 let keuangan = [];
 let mcu = [];
@@ -1172,43 +868,15 @@ let pageKeuangan = 1;
 
 
 /* ===============================
-   HELPER TANGGAL
+   FUNGSI SORT TANGGAL TERBARU
 ================================ */
 
-function parseTanggal(tanggal) {
+function sortTanggalTerbaru(a, b, field) {
 
-  if (!tanggal) {
-    return 0;
-  }
+  let dateA = new Date(a[field] || 0);
+  let dateB = new Date(b[field] || 0);
 
-  return new Date(tanggal).getTime() || 0;
-
-}
-
-
-/* ===============================
-   TOGGLE JENIS PENGELUARAN
-================================ */
-
-function toggleJenisPengeluaran() {
-
-  let jenis =
-    document.getElementById('jenis').value;
-
-  let jpSelect =
-    document.getElementById('jenisPengeluaran');
-
-  if (jenis === 'out') {
-
-    jpSelect.disabled = false;
-    jpSelect.value = 'Operational';
-
-  } else {
-
-    jpSelect.disabled = true;
-    jpSelect.value = '-';
-
-  }
+  return dateB - dateA;
 
 }
 
@@ -1221,66 +889,38 @@ async function loadDataFromSpreadsheet() {
 
   try {
 
-    localStorage.clear();
+    document.getElementById('totalIn').innerText = 'Loading...';
 
-    document.getElementById('totalIn').innerText =
-      'Loading...';
+    let response = await fetch(
+      `${SCRIPT_URL}?action=getData&db=${currentDb}`
+    );
 
-    let response =
-      await fetch(SCRIPT_URL);
-
-    let result =
-      await response.json();
+    let result = await response.json();
 
     if (result.status === "success") {
 
-      keuangan =
-        result.keuangan || [];
+      keuangan = result.keuangan || [];
+      mcu = result.mcu || [];
+      tagihan = result.tagihan || [];
 
-      mcu =
-        result.mcu || [];
-
-      tagihan =
-        result.tagihan || [];
-
-      localStorage.setItem(
-        'klinik_keuangan',
-        JSON.stringify(keuangan)
-      );
-
-      localStorage.setItem(
-        'klinik_mcu',
-        JSON.stringify(mcu)
-      );
-
-      localStorage.setItem(
-        'klinik_tagihan',
-        JSON.stringify(tagihan)
-      );
+      localStorage.setItem(`${currentDb}_keuangan`, JSON.stringify(keuangan));
+      localStorage.setItem(`${currentDb}_mcu`, JSON.stringify(mcu));
+      localStorage.setItem(`${currentDb}_tagihan`, JSON.stringify(tagihan));
 
     }
 
   } catch (error) {
 
-    console.error(
-      "Gagal memuat data dari awan:",
-      error
-    );
+    console.error("Gagal memuat data:", error);
 
     keuangan =
-      JSON.parse(
-        localStorage.getItem('klinik_keuangan')
-      ) || [];
+      JSON.parse(localStorage.getItem(`${currentDb}_keuangan`)) || [];
 
     mcu =
-      JSON.parse(
-        localStorage.getItem('klinik_mcu')
-      ) || [];
+      JSON.parse(localStorage.getItem(`${currentDb}_mcu`)) || [];
 
     tagihan =
-      JSON.parse(
-        localStorage.getItem('klinik_tagihan')
-      ) || [];
+      JSON.parse(localStorage.getItem(`${currentDb}_tagihan`)) || [];
 
   } finally {
 
@@ -1294,31 +934,46 @@ async function loadDataFromSpreadsheet() {
 
 
 /* ===============================
-   SHOW TAB
+   GANTI DATABASE (KLINIK / PT)
+================================ */
+
+function switchDatabase(dbKey) {
+
+  currentDb = dbKey;
+
+  localStorage.setItem('activeDb', dbKey);
+
+  document.getElementById('logoNama').innerText =
+    DB_LABELS[dbKey];
+
+  document.getElementById('dbSwitcher').value =
+    dbKey;
+
+  pageMcu = 1;
+  pageTagihan = 1;
+  pageKeuangan = 1;
+
+  loadDataFromSpreadsheet();
+
+}
+
+
+/* ===============================
+   TAB
 ================================ */
 
 function showTab(tab, button) {
 
-  document
-    .querySelectorAll('.tab-content')
-    .forEach(e => {
-      e.style.display = 'none';
-    });
+  document.querySelectorAll('.tab-content')
+    .forEach(e => e.style.display = 'none');
 
-  document
-    .querySelectorAll('.tab')
-    .forEach(e => {
-      e.classList.remove('active');
-    });
+  document.querySelectorAll('.tab')
+    .forEach(e => e.classList.remove('active'));
 
-  document
-    .getElementById(tab)
-    .style.display = 'block';
+  document.getElementById(tab).style.display = 'block';
 
   if (button) {
-
     button.classList.add('active');
-
   }
 
   pageMcu = 1;
@@ -1330,23 +985,18 @@ function showTab(tab, button) {
   render();
 
   if (tab === 'pengeluaran-project') {
-
     renderPengeluaranProject();
-
   }
 
   if (tab === 'laporan-bulanan') {
-
     renderLaporanBulanan();
-
   }
 
 }
 
 
 /* ===============================
-   DROPDOWN
-   TERBARU → TERLAMA
+   DROPDOWN PROJECT
 ================================ */
 
 function populateMcuDropdowns() {
@@ -1357,20 +1007,13 @@ function populateMcuDropdowns() {
   let selectKeuangan =
     document.getElementById('projectKeuangan');
 
-
   let sortedMcu =
-    [...mcu].sort((a, b) => {
-
-      return parseTanggal(b.tgl)
-           - parseTanggal(a.tgl);
-
-    });
+    [...mcu].sort((a, b) => sortTanggalTerbaru(a, b, 'tgl'));
 
 
-  let registeredInvoices =
-    tagihan.map(t =>
-      `${t.nama} (${t.lokasi || '-'})`
-    );
+  let registeredInvoices = tagihan.map(t =>
+    `${t.nama} (${t.lokasi || '-'})`
+  );
 
 
   let optionsTagihanHTML =
@@ -1382,14 +1025,12 @@ function populateMcuDropdowns() {
     let identifier =
       `${e.perusahaan} (${e.lokasi || '-'})`;
 
-    if (
-      !registeredInvoices.includes(identifier)
-    ) {
+    if (!registeredInvoices.includes(identifier)) {
 
       let total =
         e.customTotal !== undefined
-        ? e.customTotal
-        : ((e.harga || 0) * (e.jumlah || 0));
+          ? e.customTotal
+          : ((e.harga || 0) * (e.jumlah || 0));
 
       optionsTagihanHTML += `
         <option value="${identifier}">
@@ -1400,7 +1041,6 @@ function populateMcuDropdowns() {
     }
 
   });
-
 
   selectTagihan.innerHTML =
     optionsTagihanHTML;
@@ -1417,8 +1057,8 @@ function populateMcuDropdowns() {
 
     let total =
       e.customTotal !== undefined
-      ? e.customTotal
-      : ((e.harga || 0) * (e.jumlah || 0));
+        ? e.customTotal
+        : ((e.harga || 0) * (e.jumlah || 0));
 
     optionsKeuanganHTML += `
       <option value="${identifier}">
@@ -1428,7 +1068,6 @@ function populateMcuDropdowns() {
 
   });
 
-
   selectKeuangan.innerHTML =
     optionsKeuanganHTML;
 
@@ -1436,8 +1075,31 @@ function populateMcuDropdowns() {
 
 
 /* ===============================
-   TAMBAH KEUANGAN
+   PENGELUARAN
 ================================ */
+
+function toggleJenisPengeluaran() {
+
+  let jenis =
+    document.getElementById('jenis').value;
+
+  let select =
+    document.getElementById('jenisPengeluaran');
+
+  if (jenis === 'out') {
+
+    select.disabled = false;
+    select.value = 'Operational';
+
+  } else {
+
+    select.disabled = true;
+    select.value = '-';
+
+  }
+
+}
+
 
 function addKeuangan() {
 
@@ -1449,7 +1111,6 @@ function addKeuangan() {
 
   let jenisVal =
     document.getElementById('jenis').value;
-
 
   let data = {
 
@@ -1464,20 +1125,18 @@ function addKeuangan() {
 
     jenisPengeluaran:
       jenisVal === 'out'
-      ? document.getElementById('jenisPengeluaran').value
-      : '-',
+        ? document.getElementById('jenisPengeluaran').value
+        : '-',
 
     ket:
       document.getElementById('ket').value,
 
     jumlah:
-      parseInt(
-        document.getElementById('jumlah').value
-      ) || 0,
+      parseInt(document.getElementById('jumlah').value) || 0,
 
-    isAuto: false,
+    isAuto:false,
 
-    bukti: ""
+    bukti:""
 
   };
 
@@ -1487,21 +1146,20 @@ function addKeuangan() {
     let reader =
       new FileReader();
 
-    reader.onload =
-      function(e) {
+    reader.onload = function(e) {
 
-        data.bukti =
-          e.target.result;
+      data.bukti =
+        e.target.result;
 
-        keuangan.push(data);
+      keuangan.push(data);
 
-        saveAndSync();
+      saveAndSync();
 
-        render();
+      render();
 
-        resetFormKeuangan();
+      resetFormKeuangan();
 
-      };
+    };
 
     reader.readAsDataURL(file);
 
@@ -1520,38 +1178,75 @@ function addKeuangan() {
 }
 
 
-/* ===============================
-   RESET FORM KEUANGAN
-================================ */
-
 function resetFormKeuangan() {
 
   document.getElementById('tgl').value = '';
 
-  document.getElementById(
-    'projectKeuangan'
-  ).value = '';
+  document.getElementById('projectKeuangan').value = '';
 
-  document.getElementById(
-    'jenis'
-  ).value = 'in';
+  document.getElementById('jenis').value = 'in';
 
-  let jpSelect =
-    document.getElementById(
-      'jenisPengeluaran'
-    );
+  document.getElementById('jenisPengeluaran').value = '-';
 
-  jpSelect.value = '-';
-
-  jpSelect.disabled = true;
+  document.getElementById('jenisPengeluaran').disabled = true;
 
   document.getElementById('ket').value = '';
 
   document.getElementById('jumlah').value = '';
 
-  document.getElementById(
-    'buktiKeuangan'
-  ).value = '';
+  document.getElementById('buktiKeuangan').value = '';
+
+}
+
+
+function updateTableKategoriKeuangan(index, value) {
+
+  keuangan[index].jenisPengeluaran = value;
+
+  saveAndSync();
+
+  render();
+
+}
+
+
+function uploadBuktiKeuanganTable(index, inputElement) {
+
+  let file =
+    inputElement.files[0];
+
+  if (!file) return;
+
+  let reader =
+    new FileReader();
+
+  reader.onload = function(e) {
+
+    keuangan[index].bukti =
+      e.target.result;
+
+    saveAndSync();
+
+    render();
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+function removeBuktiKeuanganTable(index) {
+
+  if (confirm("Apakah Anda yakin ingin menghapus bukti transaksi ini?")) {
+
+    keuangan[index].bukti = "";
+
+    saveAndSync();
+
+    render();
+
+  }
 
 }
 
@@ -1571,25 +1266,15 @@ function filterKeuanganData() {
 
 function resetKeuanganFilter() {
 
-  document.getElementById(
-    'searchKeuanganText'
-  ).value = '';
+  document.getElementById('searchKeuanganText').value = '';
 
-  document.getElementById(
-    'filterKeuanganTglMulai'
-  ).value = '';
+  document.getElementById('filterKeuanganTglMulai').value = '';
 
-  document.getElementById(
-    'filterKeuanganTglSelesai'
-  ).value = '';
+  document.getElementById('filterKeuanganTglSelesai').value = '';
 
-  document.getElementById(
-    'filterKeuanganJenis'
-  ).value = 'all';
+  document.getElementById('filterKeuanganJenis').value = 'all';
 
-  document.getElementById(
-    'filterKeuanganKategori'
-  ).value = 'all';
+  document.getElementById('filterKeuanganKategori').value = 'all';
 
   pageKeuangan = 1;
 
@@ -1599,7 +1284,7 @@ function resetKeuanganFilter() {
 
 
 /* ===============================
-   TAMBAH MCU
+   MCU
 ================================ */
 
 function addMCU() {
@@ -1607,65 +1292,37 @@ function addMCU() {
   let checkedItems = [];
 
   document
-    .querySelectorAll(
-      '#itemPemeriksaan input:checked'
-    )
-    .forEach(cb => {
-
-      checkedItems.push(cb.value);
-
-    });
+    .querySelectorAll('#itemPemeriksaan input:checked')
+    .forEach(cb => checkedItems.push(cb.value));
 
 
   let data = {
 
     perusahaan:
-      document.getElementById(
-        'perusahaan'
-      ).value,
+      document.getElementById('perusahaan').value,
 
     lokasi:
-      document.getElementById(
-        'lokasiProject'
-      ).value,
+      document.getElementById('lokasiProject').value,
 
     tgl:
-      document.getElementById(
-        'tglMCU'
-      ).value,
+      document.getElementById('tglMCU').value,
 
     items:
       checkedItems,
 
     harga:
-      parseInt(
-        document.getElementById(
-          'hargaProject'
-        ).value
-      ) || 0,
+      parseInt(document.getElementById('hargaProject').value) || 0,
 
     jumlah:
-      parseInt(
-        document.getElementById(
-          'jmlPasien'
-        ).value
-      ) || 0,
+      parseInt(document.getElementById('jmlPasien').value) || 0,
 
     rab:
-      parseInt(
-        document.getElementById(
-          'rabProject'
-        ).value
-      ) || 0,
+      parseInt(document.getElementById('rabProject').value) || 0,
 
     fee:
-      parseInt(
-        document.getElementById(
-          'feeMCU'
-        ).value
-      ) || 0,
+      parseInt(document.getElementById('feeMCU').value) || 0,
 
-    keterangan: ""
+    keterangan:""
 
   };
 
@@ -1679,43 +1336,23 @@ function addMCU() {
   render();
 
 
-  document.getElementById(
-    'perusahaan'
-  ).value = '';
+  document.getElementById('perusahaan').value = '';
 
-  document.getElementById(
-    'lokasiProject'
-  ).value = '';
+  document.getElementById('lokasiProject').value = '';
 
-  document.getElementById(
-    'tglMCU'
-  ).value = '';
+  document.getElementById('tglMCU').value = '';
 
-  document.getElementById(
-    'hargaProject'
-  ).value = '';
+  document.getElementById('hargaProject').value = '';
 
-  document.getElementById(
-    'jmlPasien'
-  ).value = '';
+  document.getElementById('jmlPasien').value = '';
 
-  document.getElementById(
-    'rabProject'
-  ).value = '';
+  document.getElementById('rabProject').value = '';
 
-  document.getElementById(
-    'feeMCU'
-  ).value = '';
+  document.getElementById('feeMCU').value = '';
 
   document
-    .querySelectorAll(
-      '#itemPemeriksaan input'
-    )
-    .forEach(cb => {
-
-      cb.checked = false;
-
-    });
+    .querySelectorAll('#itemPemeriksaan input')
+    .forEach(cb => cb.checked = false);
 
 }
 
@@ -1726,59 +1363,24 @@ function addMCU() {
 
 function editTotalMcu(index) {
 
-  let currentMcu =
+  let current =
     mcu[index];
 
   let currentTotal =
-    currentMcu.customTotal !== undefined
-    ? currentMcu.customTotal
-    : (
-        currentMcu.harga *
-        currentMcu.jumlah
-      );
-
+    current.customTotal !== undefined
+      ? current.customTotal
+      : current.harga * current.jumlah;
 
   let newTotal =
     prompt(
-      `Masukkan Penyesuaian Total Harga untuk ${currentMcu.perusahaan}:`,
+      `Masukkan Penyesuaian Total Harga untuk ${current.perusahaan}:`,
       currentTotal
     );
 
-
   if (newTotal !== null) {
 
-    let parsedTotal =
-      parseInt(newTotal) || 0;
-
     mcu[index].customTotal =
-      parsedTotal;
-
-
-    let identifier =
-      `${currentMcu.perusahaan} (${currentMcu.lokasi || '-'})`;
-
-
-    tagihan.forEach(t => {
-
-      if (
-        `${t.nama} (${t.lokasi || '-'})`
-        === identifier
-      ) {
-
-        t.totalHarga =
-          parsedTotal;
-
-        t.sisaPelunasan =
-          t.status === 'Lunas'
-          ? 0
-          : t.status === 'Down Payment'
-          ? parsedTotal - (t.dpNominal || 0)
-          : parsedTotal;
-
-      }
-
-    });
-
+      parseInt(newTotal) || 0;
 
     saveAndSync();
 
@@ -1793,15 +1395,11 @@ function editTotalMcu(index) {
 
 function editRabMcu(index) {
 
-  let currentMcu =
-    mcu[index];
-
   let newRab =
     prompt(
-      `Edit Nominal RAB untuk ${currentMcu.perusahaan}:`,
-      currentMcu.rab || 0
+      "Edit Nominal RAB:",
+      mcu[index].rab || 0
     );
-
 
   if (newRab !== null) {
 
@@ -1819,15 +1417,11 @@ function editRabMcu(index) {
 
 function editFeeMcu(index) {
 
-  let currentMcu =
-    mcu[index];
-
   let newFee =
     prompt(
-      `Edit Nominal Fee MCU untuk ${currentMcu.perusahaan}:`,
-      currentMcu.fee || 0
+      "Edit Nominal Fee MCU:",
+      mcu[index].fee || 0
     );
-
 
   if (newFee !== null) {
 
@@ -1845,30 +1439,24 @@ function editFeeMcu(index) {
 
 function editItemMcu(index) {
 
-  let currentMcu =
-    mcu[index];
-
-  let currentItems =
-    currentMcu.items &&
-    currentMcu.items.length > 0
-    ? currentMcu.items.join(', ')
-    : '';
-
+  let current =
+    mcu[index].items
+      ? mcu[index].items.join(', ')
+      : '';
 
   let newItems =
     prompt(
-      `Edit Item Pemeriksaan untuk ${currentMcu.perusahaan} (pisahkan dengan koma):`,
-      currentItems
+      "Edit Item Pemeriksaan:",
+      current
     );
-
 
   if (newItems !== null) {
 
     mcu[index].items =
       newItems
         .split(',')
-        .map(item => item.trim())
-        .filter(item => item !== "");
+        .map(x => x.trim())
+        .filter(x => x !== '');
 
     saveAndSync();
 
@@ -1881,20 +1469,488 @@ function editItemMcu(index) {
 
 function updateKeteranganMcu(index) {
 
-  let currentMcu =
-    mcu[index];
-
   let newKet =
     prompt(
-      `Masukkan Keterangan / Catatan Project untuk ${currentMcu.perusahaan}:`,
-      currentMcu.keterangan || ""
+      "Masukkan Keterangan:",
+      mcu[index].keterangan || ''
     );
-
 
   if (newKet !== null) {
 
     mcu[index].keterangan =
       newKet;
+
+    saveAndSync();
+
+    render();
+
+  }
+
+}
+
+
+/* ===============================
+   TAGIHAN
+================================ */
+
+function addTagihan() {
+
+  let selected =
+    document.getElementById('selectMcuClient').value;
+
+  if (!selected) {
+
+    alert("Silakan pilih Client MCU terlebih dahulu!");
+
+    return;
+
+  }
+
+
+  let selectedMcu =
+    mcu.find(e =>
+      `${e.perusahaan} (${e.lokasi || '-'})`
+      === selected
+    );
+
+  if (!selectedMcu) return;
+
+
+  let total =
+    selectedMcu.customTotal !== undefined
+      ? selectedMcu.customTotal
+      : (selectedMcu.harga || 0) *
+        (selectedMcu.jumlah || 0);
+
+
+  if (
+    document.getElementById('ppnCheck').checked
+  ) {
+
+    total =
+      Math.round(total * 1.11);
+
+  }
+
+
+  let data = {
+
+    id:
+      'inv_' + Date.now(),
+
+    nama:
+      selectedMcu.perusahaan,
+
+    lokasi:
+      selectedMcu.lokasi || '-',
+
+    totalHarga:
+      total,
+
+    sisaPelunasan:
+      total,
+
+    dpNominal:
+      0,
+
+    noInvoice:
+      document.getElementById('noInvoice').value,
+
+    tglKirim:
+      document.getElementById('tglKirimInvoice').value,
+
+    durasi:
+      parseInt(
+        document.getElementById('durasiInvoice').value
+      ),
+
+    status:
+      'Belum Lunas',
+
+    lampiran:
+      "",
+
+    buktiKirim:
+      ""
+
+  };
+
+
+  let file =
+    document.getElementById('lampiranInvoice').files[0];
+
+
+  function selesaiSimpan() {
+
+    tagihan.push(data);
+
+    saveAndSync();
+
+    populateMcuDropdowns();
+
+    render();
+
+    resetFormTagihan();
+
+  }
+
+
+  if (file) {
+
+    let reader =
+      new FileReader();
+
+    reader.onload = function(e) {
+
+      data.lampiran =
+        e.target.result;
+
+      selesaiSimpan();
+
+    };
+
+    reader.readAsDataURL(file);
+
+  } else {
+
+    selesaiSimpan();
+
+  }
+
+}
+
+
+function resetFormTagihan() {
+
+  document.getElementById('selectMcuClient').value = '';
+
+  document.getElementById('noInvoice').value = '';
+
+  document.getElementById('tglKirimInvoice').value = '';
+
+  document.getElementById('lampiranInvoice').value = '';
+
+  document.getElementById('durasiInvoice').value = '14';
+
+  document.getElementById('ppnCheck').checked = false;
+
+}
+
+
+/* ===============================
+   STATUS TAGIHAN
+================================ */
+
+function updateStatus(index, value) {
+
+  let current =
+    tagihan[index];
+
+  current.status =
+    value;
+
+
+  keuangan =
+    keuangan.filter(k =>
+      !(k.isAuto === true &&
+        k.refId === current.id)
+    );
+
+
+  if (value === 'Lunas') {
+
+    current.sisaPelunasan =
+      0;
+
+    current.dpNominal =
+      0;
+
+    keuangan.push({
+
+      tgl:
+        new Date()
+          .toISOString()
+          .split('T')[0],
+
+      jenis:
+        'in',
+
+      project:
+        `${current.nama} (${current.lokasi || '-'})`,
+
+      jenisPengeluaran:
+        '-',
+
+      ket:
+        `Pelunasan Corporate: ${current.nama} (Inv: ${current.noInvoice || '-'})`,
+
+      jumlah:
+        current.totalHarga,
+
+      isAuto:
+        true,
+
+      refId:
+        current.id,
+
+      bukti:
+        ""
+
+    });
+
+  }
+
+
+  else if (value === 'Down Payment') {
+
+    let inputDP =
+      prompt(
+        `Masukkan Jumlah Down Payment (DP) untuk ${current.nama}:`,
+        current.dpNominal || 0
+      );
+
+
+    if (inputDP !== null) {
+
+      let dp =
+        parseInt(inputDP) || 0;
+
+
+      if (dp > current.totalHarga) {
+
+        alert(
+          "Jumlah DP tidak boleh melebihi total harga!"
+        );
+
+        current.status =
+          'Belum Lunas';
+
+        current.sisaPelunasan =
+          current.totalHarga;
+
+        current.dpNominal =
+          0;
+
+      } else {
+
+        current.dpNominal =
+          dp;
+
+        current.sisaPelunasan =
+          current.totalHarga - dp;
+
+
+        keuangan.push({
+
+          tgl:
+            new Date()
+              .toISOString()
+              .split('T')[0],
+
+          jenis:
+            'in',
+
+          project:
+            `${current.nama} (${current.lokasi || '-'})`,
+
+          jenisPengeluaran:
+            '-',
+
+          ket:
+            `DP Corporate: ${current.nama} (Inv: ${current.noInvoice || '-'})`,
+
+          jumlah:
+            dp,
+
+          isAuto:
+            true,
+
+          refId:
+            current.id,
+
+          bukti:
+            ""
+
+        });
+
+      }
+
+    } else {
+
+      current.status =
+        'Belum Lunas';
+
+      current.sisaPelunasan =
+        current.totalHarga;
+
+      current.dpNominal =
+        0;
+
+    }
+
+  }
+
+
+  else {
+
+    current.sisaPelunasan =
+      current.totalHarga;
+
+    current.dpNominal =
+      0;
+
+  }
+
+
+  saveAndSync();
+
+  render();
+
+}
+
+
+/* ===============================
+   HAPUS DATA
+================================ */
+
+function del(index, tipe) {
+
+  if (!confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+    return;
+  }
+
+
+  if (tipe === 'k') {
+
+    keuangan.splice(index, 1);
+
+  }
+
+
+  if (tipe === 'm') {
+
+    mcu.splice(index, 1);
+
+  }
+
+
+  if (tipe === 't') {
+
+    let target =
+      tagihan[index];
+
+    if (!target) return;
+
+
+    let targetId =
+      target.id;
+
+
+    /*
+      PENTING:
+      Hapus semua pemasukan otomatis
+      yang berasal dari invoice ini.
+    */
+
+    keuangan =
+      keuangan.filter(k =>
+        !(k.isAuto === true &&
+          k.refId === targetId)
+      );
+
+
+    tagihan.splice(index, 1);
+
+  }
+
+
+  saveAndSync();
+
+  populateMcuDropdowns();
+
+  render();
+
+}
+
+
+/* ===============================
+   FILE TAGIHAN
+================================ */
+
+function uploadSoftInvoiceTable(index, input) {
+
+  let file =
+    input.files[0];
+
+  if (!file) return;
+
+  let reader =
+    new FileReader();
+
+  reader.onload = function(e) {
+
+    tagihan[index].lampiran =
+      e.target.result;
+
+    saveAndSync();
+
+    render();
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+function removeSoftInvoiceTable(index) {
+
+  if (confirm("Hapus file soft invoice?")) {
+
+    tagihan[index].lampiran =
+      "";
+
+    saveAndSync();
+
+    render();
+
+  }
+
+}
+
+
+function uploadBuktiKirimTable(index, input) {
+
+  let file =
+    input.files[0];
+
+  if (!file) return;
+
+  let reader =
+    new FileReader();
+
+  reader.onload = function(e) {
+
+    tagihan[index].buktiKirim =
+      e.target.result;
+
+    saveAndSync();
+
+    render();
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+function removeBuktiKirimTable(index) {
+
+  if (confirm("Hapus bukti kirim?")) {
+
+    tagihan[index].buktiKirim =
+      "";
 
     saveAndSync();
 
@@ -1919,12 +1975,9 @@ function createPaginationUI(
 ) {
 
   let container =
-    document.getElementById(
-      containerId
-    );
+    document.getElementById(containerId);
 
   if (!container) return;
-
 
   if (totalData === 0) {
 
@@ -1937,17 +1990,15 @@ function createPaginationUI(
 
   let totalPages =
     limit === 'all'
-    ? 1
-    : Math.ceil(
-        totalData / limit
-      );
+      ? 1
+      : Math.ceil(totalData / limit);
 
 
-  let isLimitAll =
+  let isAll =
     limit === 'all';
 
 
-  let selectHTML = `
+  let html = `
 
     <div>
 
@@ -1955,22 +2006,17 @@ function createPaginationUI(
 
       <select
         class="pagination-select"
-        onchange="${changeLimitFunc}(this.value)">
+        onchange="${changeLimitFunc}(this.value)"
+      >
 
-        <option
-          value="30"
+        <option value="30"
           ${limit == 30 ? 'selected' : ''}>
-
           30 Baris
-
         </option>
 
-        <option
-          value="all"
-          ${isLimitAll ? 'selected' : ''}>
-
+        <option value="all"
+          ${isAll ? 'selected' : ''}>
           All (Semua)
-
         </option>
 
       </select>
@@ -1980,40 +2026,32 @@ function createPaginationUI(
   `;
 
 
-  let controlsHTML = "";
+  if (!isAll) {
 
+    html += `
 
-  if (!isLimitAll) {
-
-    controlsHTML = `
-
-      <div
-        class="pagination-controls">
+      <div class="pagination-controls">
 
         <button
           class="pagination-btn"
           ${currentPage === 1 ? 'disabled' : ''}
-          onclick="${changePageFunc}(${currentPage - 1})">
-
+          onclick="${changePageFunc}(${currentPage - 1})"
+        >
           Kembali
-
         </button>
 
         <span>
-
           Halaman ${currentPage}
           dari ${totalPages}
           (Total: ${totalData} data)
-
         </span>
 
         <button
           class="pagination-btn"
           ${currentPage === totalPages ? 'disabled' : ''}
-          onclick="${changePageFunc}(${currentPage + 1})">
-
+          onclick="${changePageFunc}(${currentPage + 1})"
+        >
           Lanjut
-
         </button>
 
       </div>
@@ -2022,23 +2060,17 @@ function createPaginationUI(
 
   } else {
 
-    controlsHTML = `
-
+    html += `
       <div>
-
-        Menampilkan seluruh
-        ${totalData} data
-
+        Menampilkan seluruh ${totalData} data
       </div>
-
     `;
 
   }
 
 
   container.innerHTML =
-    selectHTML +
-    controlsHTML;
+    html;
 
 }
 
@@ -2047,10 +2079,11 @@ function changeLimitMcu(val) {
 
   limitMcu =
     val === 'all'
-    ? 'all'
-    : parseInt(val);
+      ? 'all'
+      : parseInt(val);
 
-  pageMcu = 1;
+  pageMcu =
+    1;
 
   render();
 
@@ -2059,7 +2092,8 @@ function changeLimitMcu(val) {
 
 function changePageMcu(page) {
 
-  pageMcu = page;
+  pageMcu =
+    page;
 
   render();
 
@@ -2070,10 +2104,11 @@ function changeLimitTagihan(val) {
 
   limitTagihan =
     val === 'all'
-    ? 'all'
-    : parseInt(val);
+      ? 'all'
+      : parseInt(val);
 
-  pageTagihan = 1;
+  pageTagihan =
+    1;
 
   render();
 
@@ -2082,7 +2117,8 @@ function changeLimitTagihan(val) {
 
 function changePageTagihan(page) {
 
-  pageTagihan = page;
+  pageTagihan =
+    page;
 
   render();
 
@@ -2093,10 +2129,11 @@ function changeLimitKeuangan(val) {
 
   limitKeuangan =
     val === 'all'
-    ? 'all'
-    : parseInt(val);
+      ? 'all'
+      : parseInt(val);
 
-  pageKeuangan = 1;
+  pageKeuangan =
+    1;
 
   render();
 
@@ -2105,7 +2142,8 @@ function changeLimitKeuangan(val) {
 
 function changePageKeuangan(page) {
 
-  pageKeuangan = page;
+  pageKeuangan =
+    page;
 
   render();
 
@@ -2113,685 +2151,68 @@ function changePageKeuangan(page) {
 
 
 /* ===============================
-   UPLOAD FILE
-================================ */
-
-function uploadBuktiKeuanganTable(
-  index,
-  inputElement
-) {
-
-  let file =
-    inputElement.files[0];
-
-  if (file) {
-
-    let reader =
-      new FileReader();
-
-    reader.onload =
-      function(e) {
-
-        keuangan[index].bukti =
-          e.target.result;
-
-        saveAndSync();
-
-        render();
-
-      };
-
-    reader.readAsDataURL(file);
-
-  }
-
-}
-
-
-function removeBuktiKeuanganTable(index) {
-
-  if (
-    confirm(
-      "Apakah Anda yakin ingin menghapus berkas bukti transaksi ini?"
-    )
-  ) {
-
-    keuangan[index].bukti =
-      "";
-
-    saveAndSync();
-
-    render();
-
-  }
-
-}
-
-
-function uploadSoftInvoiceTable(
-  index,
-  inputElement
-) {
-
-  let file =
-    inputElement.files[0];
-
-  if (file) {
-
-    let reader =
-      new FileReader();
-
-    reader.onload =
-      function(e) {
-
-        tagihan[index].lampiran =
-          e.target.result;
-
-        saveAndSync();
-
-        render();
-
-      };
-
-    reader.readAsDataURL(file);
-
-  }
-
-}
-
-
-function removeSoftInvoiceTable(index) {
-
-  if (
-    confirm(
-      "Apakah Anda yakin ingin menghapus file soft invoice ini?"
-    )
-  ) {
-
-    tagihan[index].lampiran =
-      "";
-
-    saveAndSync();
-
-    render();
-
-  }
-
-}
-
-
-function uploadBuktiKirimTable(
-  index,
-  inputElement
-) {
-
-  let file =
-    inputElement.files[0];
-
-  if (file) {
-
-    let reader =
-      new FileReader();
-
-    reader.onload =
-      function(e) {
-
-        tagihan[index].buktiKirim =
-          e.target.result;
-
-        saveAndSync();
-
-        render();
-
-      };
-
-    reader.readAsDataURL(file);
-
-  }
-
-}
-
-
-function removeBuktiKirimTable(index) {
-
-  if (
-    confirm(
-      "Apakah Anda yakin ingin menghapus file bukti kirim ini?"
-    )
-  ) {
-
-    tagihan[index].buktiKirim =
-      "";
-
-    saveAndSync();
-
-    render();
-
-  }
-
-}
-
-
-/* ===============================
-   TAMBAH TAGIHAN
-================================ */
-
-function addTagihan() {
-
-  let selectedMcuVal =
-    document.getElementById(
-      'selectMcuClient'
-    ).value;
-
-
-  if (
-    selectedMcuVal === ""
-  ) {
-
-    alert(
-      "Silakan pilih Client MCU terlebih dahulu!"
-    );
-
-    return;
-
-  }
-
-
-  let selectedMcu =
-    mcu.find(
-      e =>
-        `${e.perusahaan} (${e.lokasi || '-'})`
-        === selectedMcuVal
-    );
-
-
-  if (!selectedMcu) return;
-
-
-  let fileInput =
-    document.getElementById(
-      'lampiranInvoice'
-    );
-
-  let file =
-    fileInput.files[0];
-
-
-  let calculatedTotal =
-    selectedMcu.customTotal !== undefined
-    ? selectedMcu.customTotal
-    : (
-        (selectedMcu.harga || 0) *
-        (selectedMcu.jumlah || 0)
-      );
-
-
-  if (
-    document.getElementById(
-      'ppnCheck'
-    ).checked
-  ) {
-
-    calculatedTotal =
-      Math.round(
-        calculatedTotal * 1.11
-      );
-
-  }
-
-
-  let data = {
-
-    id:
-      'inv_' + Date.now(),
-
-    nama:
-      selectedMcu.perusahaan,
-
-    lokasi:
-      selectedMcu.lokasi || '-',
-
-    totalHarga:
-      calculatedTotal,
-
-    sisaPelunasan:
-      calculatedTotal,
-
-    dpNominal:
-      0,
-
-    noInvoice:
-      document.getElementById(
-        'noInvoice'
-      ).value,
-
-    tglKirim:
-      document.getElementById(
-        'tglKirimInvoice'
-      ).value,
-
-    durasi:
-      parseInt(
-        document.getElementById(
-          'durasiInvoice'
-        ).value
-      ),
-
-    status:
-      'Belum Lunas',
-
-    lampiran:
-      "",
-
-    buktiKirim:
-      ""
-
-  };
-
-
-  if (file) {
-
-    let reader =
-      new FileReader();
-
-    reader.onload =
-      function(e) {
-
-        data.lampiran =
-          e.target.result;
-
-        tagihan.push(data);
-
-        saveAndSync();
-
-        populateMcuDropdowns();
-
-        render();
-
-        resetFormTagihan();
-
-      };
-
-    reader.readAsDataURL(file);
-
-  } else {
-
-    tagihan.push(data);
-
-    saveAndSync();
-
-    populateMcuDropdowns();
-
-    render();
-
-    resetFormTagihan();
-
-  }
-
-}
-
-
-function resetFormTagihan() {
-
-  document.getElementById(
-    'selectMcuClient'
-  ).value = '';
-
-  document.getElementById(
-    'noInvoice'
-  ).value = '';
-
-  document.getElementById(
-    'tglKirimInvoice'
-  ).value = '';
-
-  document.getElementById(
-    'lampiranInvoice'
-  ).value = '';
-
-  document.getElementById(
-    'durasiInvoice'
-  ).value = '14';
-
-  document.getElementById(
-    'ppnCheck'
-  ).checked = false;
-
-}
-
-
-/* ===============================
-   UPDATE STATUS
-================================ */
-
-function updateStatus(
-  index,
-  value
-) {
-
-  let currentTagihan =
-    tagihan[index];
-
-  currentTagihan.status =
-    value;
-
-
-  if (value === 'Lunas') {
-
-    currentTagihan.sisaPelunasan =
-      0;
-
-    keuangan =
-      keuangan.filter(
-        k =>
-          !(
-            k.isAuto === true &&
-            k.refId === currentTagihan.id
-          )
-      );
-
-
-    keuangan.push({
-
-      tgl:
-        new Date()
-          .toISOString()
-          .split('T')[0],
-
-      jenis:
-        'in',
-
-      project:
-        `${currentTagihan.nama} (${currentTagihan.lokasi || '-'})`,
-
-      jenisPengeluaran:
-        '-',
-
-      ket:
-        `Pelunasan Corporate: ${currentTagihan.nama} (Inv: ${currentTagihan.noInvoice || '-'})`,
-
-      jumlah:
-        currentTagihan.totalHarga,
-
-      isAuto:
-        true,
-
-      refId:
-        currentTagihan.id,
-
-      bukti:
-        ""
-
-    });
-
-  }
-
-
-  else if (
-    value === 'Down Payment'
-  ) {
-
-    let currentDP =
-      currentTagihan.dpNominal || 0;
-
-
-    let inputDP =
-      prompt(
-        `Masukkan Jumlah Down Payment (DP) untuk ${currentTagihan.nama}:`,
-        currentDP
-      );
-
-
-    if (
-      inputDP !== null
-    ) {
-
-      let parsedDP =
-        parseInt(inputDP) || 0;
-
-
-      if (
-        parsedDP >
-        currentTagihan.totalHarga
-      ) {
-
-        alert(
-          "Jumlah DP tidak boleh melebihi total harga!"
-        );
-
-        currentTagihan.status =
-          'Belum Lunas';
-
-        currentTagihan.sisaPelunasan =
-          currentTagihan.totalHarga;
-
-      } else {
-
-        currentTagihan.dpNominal =
-          parsedDP;
-
-        currentTagihan.sisaPelunasan =
-          currentTagihan.totalHarga -
-          parsedDP;
-
-
-        keuangan =
-          keuangan.filter(
-            k =>
-              !(
-                k.isAuto === true &&
-                k.refId === currentTagihan.id
-              )
-          );
-
-
-        keuangan.push({
-
-          tgl:
-            new Date()
-              .toISOString()
-              .split('T')[0],
-
-          jenis:
-            'in',
-
-          project:
-            `${currentTagihan.nama} (${currentTagihan.lokasi || '-'})`,
-
-          jenisPengeluaran:
-            '-',
-
-          ket:
-            `DP Corporate: ${currentTagihan.nama} (Inv: ${currentTagihan.noInvoice || '-'})`,
-
-          jumlah:
-            parsedDP,
-
-          isAuto:
-            true,
-
-          refId:
-            currentTagihan.id,
-
-          bukti:
-            ""
-
-        });
-
-      }
-
-    } else {
-
-      currentTagihan.status =
-        'Belum Lunas';
-
-      currentTagihan.sisaPelunasan =
-        currentTagihan.totalHarga;
-
-    }
-
-  }
-
-
-  else {
-
-    currentTagihan.sisaPelunasan =
-      currentTagihan.totalHarga;
-
-    currentTagihan.dpNominal =
-      0;
-
-
-    keuangan =
-      keuangan.filter(
-        k =>
-          !(
-            k.isAuto === true &&
-            k.refId === currentTagihan.id
-          )
-      );
-
-  }
-
-
-  saveAndSync();
-
-  render();
-
-}
-
-
-/* ===============================
-   DELETE
-================================ */
-
-function del(i, tipe) {
-
-  if (
-    !confirm(
-      "Apakah Anda yakin ingin menghapus data ini?"
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  if (tipe === 'k') {
-
-    keuangan.splice(i, 1);
-
-  }
-
-
-  if (tipe === 'm') {
-
-    mcu.splice(i, 1);
-
-  }
-
-
-  if (tipe === 't') {
-
-    let targetId =
-      tagihan[i].id;
-
-
-    keuangan =
-      keuangan.filter(
-        k =>
-          !(
-            k.isAuto === true &&
-            k.refId === targetId
-          )
-      );
-
-
-    tagihan.splice(i, 1);
-
-  }
-
-
-  saveAndSync();
-
-  populateMcuDropdowns();
-
-  render();
-
-}
-
-
-/* ===============================
-   SAVE & SYNC
+   SAVE KE SPREADSHEET
 ================================ */
 
 function saveAndSync() {
 
   localStorage.setItem(
-    'klinik_keuangan',
+    `${currentDb}_keuangan`,
     JSON.stringify(keuangan)
   );
 
   localStorage.setItem(
-    'klinik_mcu',
+    `${currentDb}_mcu`,
     JSON.stringify(mcu)
   );
 
   localStorage.setItem(
-    'klinik_tagihan',
+    `${currentDb}_tagihan`,
     JSON.stringify(tagihan)
   );
 
 
-  fetch(
-    SCRIPT_URL,
-    {
+  fetch(SCRIPT_URL, {
 
-      method:
-        'POST',
+    method:'POST',
 
-      mode:
-        'no-cors',
+    mode:'no-cors',
 
-      headers:
-        {
-          'Content-Type':
-            'application/json'
-        },
+    headers:{
+      'Content-Type':'application/json'
+    },
 
-      body:
-        JSON.stringify({
+    body:JSON.stringify({
 
-          action:
-            "saveAll",
+      action:'saveAll',
 
-          keuangan:
-            keuangan,
+      db:
+        currentDb,
 
-          mcu:
-            mcu,
+      keuangan:
+        keuangan,
 
-          tagihan:
-            tagihan
+      mcu:
+        mcu,
 
-        })
+      tagihan:
+        tagihan
 
-    }
+    })
 
+  })
+
+  .then(() =>
+    console.log(
+      "Data berhasil disinkronisasi."
+    )
   )
-  .then(
-    () =>
-      console.log(
-        "Data tersinkronisasi otomatis ke Google Sheets."
-      )
-  )
-  .catch(
-    err =>
-      console.error(
-        "Sinkronisasi gagal:",
-        err
-      )
+
+  .catch(err =>
+    console.error(
+      "Sinkronisasi gagal:",
+      err
+    )
   );
 
 }
@@ -2799,278 +2220,211 @@ function saveAndSync() {
 
 /* ===============================
    RENDER PENGELUARAN PROJECT
-   TERBARU → TERLAMA
 ================================ */
 
 function renderPengeluaranProject() {
 
-  let listP =
+  let list =
     document.getElementById(
       'listPengeluaranProject'
     );
 
-  listP.innerHTML = '';
-
-
-  if (
-    mcu.length === 0
-  ) {
-
-    listP.innerHTML =
-      '<tr><td colspan="12" style="text-align:center;">Tidak ada data project MCU.</td></tr>';
-
-    return;
-
-  }
+  list.innerHTML =
+    '';
 
 
   let sortedMcu =
-    [...mcu].sort(
-      (a, b) =>
-        parseTanggal(b.tgl)
-        -
-        parseTanggal(a.tgl)
-    );
+    [...mcu]
+      .sort((a,b) =>
+        sortTanggalTerbaru(a,b,'tgl')
+      );
 
 
-  sortedMcu.forEach(
-    (e, i) => {
+  sortedMcu.forEach((e,i) => {
 
-      let identifier =
-        `${e.perusahaan} (${e.lokasi || '-'})`;
+    let identifier =
+      `${e.perusahaan} (${e.lokasi || '-'})`;
 
 
-      let pengeluaranOpsBmhp =
-        keuangan
+    let ops =
+      keuangan
 
-        .filter(
-          k =>
-            k.jenis === 'out' &&
-            k.project === identifier &&
-            (
-              k.jenisPengeluaran === 'Operational' ||
-              k.jenisPengeluaran === 'Operasional' ||
-              k.jenisPengeluaran === 'BMHP'
-            )
+        .filter(k =>
+          k.jenis === 'out' &&
+          k.project === identifier &&
+          (
+            k.jenisPengeluaran === 'Operational' ||
+            k.jenisPengeluaran === 'Operasional' ||
+            k.jenisPengeluaran === 'BMHP'
+          )
         )
 
         .reduce(
-          (sum, current) =>
-            sum +
-            (current.jumlah || 0),
+          (sum,k) =>
+            sum + (k.jumlah || 0),
           0
         );
 
 
-      let pengeluaranFeeMCU =
-        keuangan
+    let fee =
+      keuangan
 
-        .filter(
-          k =>
-            k.jenis === 'out' &&
-            k.project === identifier &&
-            (
-              k.jenisPengeluaran ===
-                'Fee Petugas & Dokter' ||
-              k.jenisPengeluaran ===
-                'Sewa Alat'
-            )
+        .filter(k =>
+          k.jenis === 'out' &&
+          k.project === identifier &&
+          (
+            k.jenisPengeluaran === 'Fee Petugas & Dokter' ||
+            k.jenisPengeluaran === 'Sewa Alat'
+          )
         )
 
         .reduce(
-          (sum, current) =>
-            sum +
-            (current.jumlah || 0),
+          (sum,k) =>
+            sum + (k.jumlah || 0),
           0
         );
 
 
-      let totalSeluruhPengeluaran =
-        keuangan
+    let totalOut =
+      keuangan
 
-        .filter(
-          k =>
-            k.jenis === 'out' &&
-            k.project === identifier
+        .filter(k =>
+          k.jenis === 'out' &&
+          k.project === identifier
         )
 
         .reduce(
-          (sum, current) =>
-            sum +
-            (current.jumlah || 0),
+          (sum,k) =>
+            sum + (k.jumlah || 0),
           0
         );
 
 
-      let nominalRab =
-        e.rab || 0;
+    let rab =
+      e.rab || 0;
 
+    let feeTarget =
+      e.fee || 0;
 
-      let selisihRab =
-        nominalRab -
-        pengeluaranOpsBmhp;
-
-
-      let nominalFeeTarget =
-        e.fee || 0;
-
-
-      let selisihFee =
-        nominalFeeTarget -
-        pengeluaranFeeMCU;
-
-
-      let totalHargaInvoice =
-        e.customTotal !== undefined
+    let totalHarga =
+      e.customTotal !== undefined
         ? e.customTotal
-        : (
-            (e.harga || 0) *
-            (e.jumlah || 0)
-          );
+        : (e.harga || 0) *
+          (e.jumlah || 0);
 
 
-      let marginMcu =
-        totalHargaInvoice -
-        totalSeluruhPengeluaran;
+    let selisihRab =
+      rab - ops;
+
+    let selisihFee =
+      feeTarget - fee;
+
+    let margin =
+      totalHarga - totalOut;
 
 
-      listP.innerHTML += `
+    list.innerHTML += `
 
-        <tr>
+      <tr>
 
-          <td>${i + 1}</td>
+        <td>${i + 1}</td>
 
-          <td>
-            <strong>
-              ${e.perusahaan}
-            </strong>
-          </td>
+        <td>
+          <strong>${e.perusahaan}</strong>
+        </td>
 
-          <td>
-            ${e.lokasi || '-'}
-          </td>
+        <td>
+          ${e.lokasi || '-'}
+        </td>
 
-          <td>
-            <strong>
-              Rp ${nominalRab.toLocaleString()}
-            </strong>
-          </td>
+        <td>
+          Rp ${rab.toLocaleString()}
+        </td>
 
-          <td>
-            <strong>
-              Rp ${pengeluaranOpsBmhp.toLocaleString()}
-            </strong>
-          </td>
+        <td>
+          Rp ${ops.toLocaleString()}
+        </td>
 
-          <td
-            style="color:${selisihRab >= 0 ? 'green' : 'red'};
-            font-weight:bold;">
+        <td style="color:${selisihRab >= 0 ? 'green' : 'red'};font-weight:bold;">
+          Rp ${selisihRab.toLocaleString()}
+        </td>
 
-            Rp ${selisihRab.toLocaleString()}
+        <td>
+          Rp ${feeTarget.toLocaleString()}
+        </td>
 
-          </td>
+        <td>
+          Rp ${fee.toLocaleString()}
+        </td>
 
-          <td>
-            <strong>
-              Rp ${nominalFeeTarget.toLocaleString()}
-            </strong>
-          </td>
+        <td style="color:${selisihFee >= 0 ? 'green' : 'red'};font-weight:bold;">
+          Rp ${selisihFee.toLocaleString()}
+        </td>
 
-          <td>
-            <strong>
-              Rp ${pengeluaranFeeMCU.toLocaleString()}
-            </strong>
-          </td>
+        <td>
+          Rp ${totalOut.toLocaleString()}
+        </td>
 
-          <td
-            style="color:${selisihFee >= 0 ? 'green' : 'red'};
-            font-weight:bold;">
+        <td>
+          Rp ${totalHarga.toLocaleString()}
+        </td>
 
-            Rp ${selisihFee.toLocaleString()}
+        <td style="color:${margin >= 0 ? '#007a3d' : '#d32f2f'};font-weight:bold;">
+          Rp ${margin.toLocaleString()}
+        </td>
 
-          </td>
+      </tr>
 
-          <td
-            style="font-weight:bold;color:#555;">
+    `;
 
-            Rp ${totalSeluruhPengeluaran.toLocaleString()}
-
-          </td>
-
-          <td
-            style="font-weight:bold;color:#007a3d;">
-
-            Rp ${totalHargaInvoice.toLocaleString()}
-
-          </td>
-
-          <td
-            style="color:${marginMcu >= 0 ? '#007a3d' : '#d32f2f'};
-            font-weight:bold;
-            background:#f9f9f9;">
-
-            Rp ${marginMcu.toLocaleString()}
-
-          </td>
-
-        </tr>
-
-      `;
-
-    }
-
-  );
+  });
 
 }
 
 
 /* ===============================
    LAPORAN BULANAN
-   TERBARU → TERLAMA
 ================================ */
 
 function renderLaporanBulanan() {
 
-  let listL =
+  let list =
     document.getElementById(
       'listLaporanBulanan'
     );
 
-  listL.innerHTML = '';
+  list.innerHTML =
+    '';
 
 
-  let laporanData = {};
+  let data =
+    {};
 
 
   mcu.forEach(e => {
 
     if (!e.tgl) return;
 
+    let key =
+      e.tgl.substring(0,7);
 
-    let blnThn =
-      e.tgl.substring(0, 7);
 
+    if (!data[key]) {
 
-    if (!laporanData[blnThn]) {
+      data[key] = {
 
-      laporanData[blnThn] = {
+        totalProject:0,
 
-        totalProject:
-          0,
+        pemasukan:0,
 
-        pemasukan:
-          0,
-
-        pengeluaran:
-          0
+        pengeluaran:0
 
       };
 
     }
 
 
-    laporanData[blnThn]
-      .totalProject++;
+    data[key].totalProject++;
 
   });
 
@@ -3079,23 +2433,19 @@ function renderLaporanBulanan() {
 
     if (!k.tgl) return;
 
+    let key =
+      k.tgl.substring(0,7);
 
-    let blnThn =
-      k.tgl.substring(0, 7);
 
+    if (!data[key]) {
 
-    if (!laporanData[blnThn]) {
+      data[key] = {
 
-      laporanData[blnThn] = {
+        totalProject:0,
 
-        totalProject:
-          0,
+        pemasukan:0,
 
-        pemasukan:
-          0,
-
-        pengeluaran:
-          0
+        pengeluaran:0
 
       };
 
@@ -3104,17 +2454,14 @@ function renderLaporanBulanan() {
 
     if (k.jenis === 'in') {
 
-      laporanData[blnThn]
-        .pemasukan +=
+      data[key].pemasukan +=
         k.jumlah || 0;
 
     }
 
-
     if (k.jenis === 'out') {
 
-      laporanData[blnThn]
-        .pengeluaran +=
+      data[key].pengeluaran +=
         k.jumlah || 0;
 
     }
@@ -3122,28 +2469,13 @@ function renderLaporanBulanan() {
   });
 
 
-  let sortedKeys =
-    Object.keys(
-      laporanData
-    ).sort(
-      (a, b) =>
-        b.localeCompare(a)
-    );
+  let keys =
+    Object.keys(data)
+      .sort()
+      .reverse();
 
 
-  if (
-    sortedKeys.length === 0
-  ) {
-
-    listL.innerHTML =
-      '<tr><td colspan="4" style="text-align:center;">Tidak ada data keuangan untuk dibuat laporan.</td></tr>';
-
-    return;
-
-  }
-
-
-  const namaBulan = [
+  const bulan = [
 
     "Januari",
     "Februari",
@@ -3161,542 +2493,388 @@ function renderLaporanBulanan() {
   ];
 
 
-  sortedKeys.forEach(
-    key => {
+  keys.forEach(key => {
 
-      let parts =
-        key.split('-');
-
-
-      let tahun =
-        parts[0];
+    let parts =
+      key.split('-');
 
 
-      let bulanIndex =
-        parseInt(
-          parts[1]
-        ) - 1;
+    let label =
+      `${bulan[parseInt(parts[1]) - 1]} ${parts[0]}`;
 
 
-      let labelBulan =
-        `${namaBulan[bulanIndex]} ${tahun}`;
+    let d =
+      data[key];
 
 
-      let data =
-        laporanData[key];
+    list.innerHTML += `
 
+      <tr>
 
-      listL.innerHTML += `
+        <td>
+          <strong>${label}</strong>
+        </td>
 
-        <tr>
+        <td>
+          ${d.totalProject} Project
+        </td>
 
-          <td>
-            <strong>
-              ${labelBulan}
-            </strong>
-          </td>
+        <td style="color:#007a3d;font-weight:bold;">
+          Rp ${d.pemasukan.toLocaleString()}
+        </td>
 
-          <td>
-            ${data.totalProject}
-            Project
-          </td>
+        <td style="color:#d32f2f;font-weight:bold;">
+          Rp ${d.pengeluaran.toLocaleString()}
+        </td>
 
-          <td
-            style="color:#007a3d;
-            font-weight:bold;">
+      </tr>
 
-            Rp ${data.pemasukan.toLocaleString()}
+    `;
 
-          </td>
-
-          <td
-            style="color:#d32f2f;
-            font-weight:bold;">
-
-            Rp ${data.pengeluaran.toLocaleString()}
-
-          </td>
-
-        </tr>
-
-      `;
-
-    }
-
-  );
+  });
 
 }
 
 
 /* ===============================
-   RENDER SEMUA TABEL
+   RENDER UTAMA
 ================================ */
 
 function render() {
 
 
-  /* =============================
+  /* ===============================
      KEUANGAN
-     TERBARU → TERLAMA
-  ============================== */
+  ================================ */
 
   let listK =
     document.getElementById(
       'listKeuangan'
     );
 
-  listK.innerHTML = '';
+  listK.innerHTML =
+    '';
 
 
-  let totalIn = 0;
+  let totalIn =
+    0;
 
-  let totalOut = 0;
+  let totalOut =
+    0;
 
 
   let indexedKeuangan =
     keuangan.map(
-      (item, originalIndex) => ({
+      (item,index) => ({
         ...item,
-        originalIndex
+        originalIndex:index
       })
     );
 
 
+  /*
+    TERBARU -> TERLAMA
+  */
+
   indexedKeuangan.sort(
-    (a, b) =>
-      parseTanggal(b.tgl)
-      -
-      parseTanggal(a.tgl)
+    (a,b) =>
+      sortTanggalTerbaru(a,b,'tgl')
   );
 
 
-  indexedKeuangan.forEach(
-    e => {
+  indexedKeuangan.forEach(e => {
 
-      if (e.jenis === 'in') {
+    if (e.jenis === 'in') {
 
-        totalIn +=
-          e.jumlah || 0;
+      totalIn +=
+        e.jumlah || 0;
 
-      } else {
+    } else {
 
-        totalOut +=
-          e.jumlah || 0;
-
-      }
+      totalOut +=
+        e.jumlah || 0;
 
     }
-  );
+
+  });
 
 
-  let searchTxt =
+  let search =
     document.getElementById(
       'searchKeuanganText'
     )?.value
-    .toLowerCase() || "";
+      .toLowerCase() || '';
 
 
-  let filterTglMulai =
+  let mulai =
     document.getElementById(
       'filterKeuanganTglMulai'
-    )?.value || "";
+    )?.value || '';
 
 
-  let filterTglSelesai =
+  let selesai =
     document.getElementById(
       'filterKeuanganTglSelesai'
-    )?.value || "";
+    )?.value || '';
 
 
-  let filterJenis =
+  let jenis =
     document.getElementById(
       'filterKeuanganJenis'
-    )?.value || "all";
+    )?.value || 'all';
 
 
-  let filterKategori =
+  let kategori =
     document.getElementById(
       'filterKeuanganKategori'
-    )?.value || "all";
+    )?.value || 'all';
 
 
-  let filteredKeuangan =
-    indexedKeuangan.filter(
-      e => {
+  let filtered =
+    indexedKeuangan.filter(e => {
 
-        let project =
-          String(
-            e.project || ''
-          ).toLowerCase();
+      let project =
+        (e.project || '')
+          .toLowerCase();
 
-
-        let ket =
-          String(
-            e.ket || ''
-          ).toLowerCase();
-
-
-        if (
-          searchTxt &&
-          !project.includes(searchTxt) &&
-          !ket.includes(searchTxt)
-        ) {
-
-          return false;
-
-        }
-
-
-        if (
-          filterTglMulai &&
-          e.tgl < filterTglMulai
-        ) {
-
-          return false;
-
-        }
-
-
-        if (
-          filterTglSelesai &&
-          e.tgl > filterTglSelesai
-        ) {
-
-          return false;
-
-        }
-
-
-        if (
-          filterJenis !== 'all' &&
-          e.jenis !== filterJenis
-        ) {
-
-          return false;
-
-        }
-
-
-        let kategoriSaatIni =
-          e.jenisPengeluaran ||
-          (
-            e.jenis === 'out'
-            ? 'Operational'
-            : '-'
-          );
-
-
-        if (
-          kategoriSaatIni ===
-          'Operasional'
-        ) {
-
-          kategoriSaatIni =
-            'Operational';
-
-        }
-
-
-        if (
-          filterKategori !== 'all' &&
-          kategoriSaatIni !== filterKategori
-        ) {
-
-          return false;
-
-        }
-
-
-        return true;
-
-      }
-    );
-
-
-  let displayedKeuangan;
-
-
-  if (
-    limitKeuangan === 'all'
-  ) {
-
-    displayedKeuangan =
-      filteredKeuangan;
-
-  } else {
-
-    let start =
-      (
-        pageKeuangan - 1
-      ) *
-      limitKeuangan;
-
-
-    displayedKeuangan =
-      filteredKeuangan.slice(
-        start,
-        start + limitKeuangan
-      );
-
-  }
-
-
-  displayedKeuangan.forEach(
-    e => {
-
-      let autoLabel =
-        e.isAuto
-        ? `
-          <br>
-          <span
-            style="
-              background:#E8F5E9;
-              color:#007a3d;
-              padding:2px 6px;
-              border-radius:4px;
-              font-size:11px;
-            ">
-
-            Otomatis Penagihan
-
-          </span>
-        `
-        : '';
-
-
-      let buktiHTML = "";
+      let ket =
+        (e.ket || '')
+          .toLowerCase();
 
 
       if (
-        e.source ||
-        e.bukti
+        search &&
+        !project.includes(search) &&
+        !ket.includes(search)
       ) {
-
-        let src =
-          e.source ||
-          e.bukti;
-
-
-        buktiHTML = `
-
-          <a
-            href="${src}"
-            target="_blank"
-            class="btn-view">
-
-            Lihat Bukti
-
-          </a>
-
-          <br>
-
-          <button
-            class="btn-remove-file"
-            onclick="
-              removeBuktiKeuanganTable(
-                ${e.originalIndex}
-              )
-            ">
-
-            Hapus Bukti
-
-          </button>
-
-        `;
-
-      } else {
-
-        buktiHTML = `
-
-          <span
-            style="
-              font-size:11px;
-              color:#999;
-              display:block;
-            ">
-
-            Belum ada bukti
-
-          </span>
-
-          <input
-            type="file"
-            class="file-upload-table"
-            accept="image/jpeg,image/png,application/pdf"
-            onchange="
-              uploadBuktiKeuanganTable(
-                ${e.originalIndex},
-                this
-              )
-            ">
-
-        `;
-
+        return false;
       }
 
 
-      let kategoriSaatIni =
+      if (
+        mulai &&
+        e.tgl < mulai
+      ) {
+        return false;
+      }
+
+
+      if (
+        selesai &&
+        e.tgl > selesai
+      ) {
+        return false;
+      }
+
+
+      if (
+        jenis !== 'all' &&
+        e.jenis !== jenis
+      ) {
+        return false;
+      }
+
+
+      let kat =
         e.jenisPengeluaran ||
-        (
-          e.jenis === 'out'
+        (e.jenis === 'out'
           ? 'Operational'
-          : '-'
-        );
+          : '-');
 
 
-      if (
-        kategoriSaatIni ===
-        'Operasional'
-      ) {
+      if (kat === 'Operasional') {
 
-        kategoriSaatIni =
+        kat =
           'Operational';
 
       }
 
 
-      let selectKategoriHTML;
-
-
       if (
-        e.jenis === 'in' ||
-        e.isAuto
+        kategori !== 'all' &&
+        kat !== kategori
       ) {
-
-        selectKategoriHTML = `
-
-          <select
-            class="table-select-kategori"
-            disabled>
-
-            <option value="-">
-              -
-            </option>
-
-          </select>
-
-        `;
-
-      } else {
-
-        selectKategoriHTML = `
-
-          <select
-            class="table-select-kategori"
-            onchange="
-              updateTableKategoriKeuangan(
-                ${e.originalIndex},
-                this.value
-              )
-            ">
-
-            <option
-              value="Operational"
-              ${kategoriSaatIni === 'Operational' ? 'selected' : ''}>
-
-              Operational
-
-            </option>
-
-            <option
-              value="BMHP"
-              ${kategoriSaatIni === 'BMHP' ? 'selected' : ''}>
-
-              BMHP
-
-            </option>
-
-            <option
-              value="Fee Petugas & Dokter"
-              ${kategoriSaatIni === 'Fee Petugas & Dokter' ? 'selected' : ''}>
-
-              Fee Petugas & Dokter
-
-            </option>
-
-            <option
-              value="Sewa Alat"
-              ${kategoriSaatIni === 'Sewa Alat' ? 'selected' : ''}>
-
-              Sewa Alat
-
-            </option>
-
-          </select>
-
-        `;
-
+        return false;
       }
 
 
-      listK.innerHTML += `
+      return true;
 
-        <tr>
+    });
 
-          <td>
-            ${formatTanggal(e.tgl)}
-          </td>
 
-          <td>
-            <strong>
-              ${
-                e.jenis === 'in'
-                ? 'Pemasukan'
-                : 'Pengeluaran'
-              }
-            </strong>
-          </td>
+  let displayed =
+    limitKeuangan === 'all'
+      ? filtered
+      : filtered.slice(
+          (pageKeuangan - 1) * limitKeuangan,
+          pageKeuangan * limitKeuangan
+        );
 
-          <td>
-            ${e.project || '-'}
-          </td>
 
-          <td>
-            ${selectKategoriHTML}
-          </td>
+  displayed.forEach(e => {
 
-          <td>
-            ${e.ket || '-'}
-            ${autoLabel}
-          </td>
+    let src =
+      e.source ||
+      e.bukti;
 
-          <td>
-            Rp ${(e.jumlah || 0).toLocaleString()}
-          </td>
 
-          <td>
-            ${buktiHTML}
-          </td>
+    let buktiHTML =
+      src
 
-          <td>
+      ? `
 
-            <button
-              class="btn-del"
-              onclick="
-                del(
-                  ${e.originalIndex},
-                  'k'
-                )
-              ">
+        <a
+          href="${src}"
+          target="_blank"
+          class="btn-view"
+        >
+          Lihat Bukti
+        </a>
 
-              Hapus
+        <br>
 
-            </button>
+        <button
+          class="btn-remove-file"
+          onclick="removeBuktiKeuanganTable(${e.originalIndex})"
+        >
+          Hapus Bukti
+        </button>
 
-          </td>
+      `
 
-        </tr>
+      : `
+
+        <input
+          type="file"
+          class="file-upload-table"
+          accept="image/jpeg,image/png,application/pdf"
+          onchange="uploadBuktiKeuanganTable(${e.originalIndex},this)"
+        >
 
       `;
 
+
+    let kat =
+      e.jenisPengeluaran ||
+      (e.jenis === 'out'
+        ? 'Operational'
+        : '-');
+
+
+    if (kat === 'Operasional') {
+
+      kat =
+        'Operational';
+
     }
 
-  );
+
+    let selectKat =
+      (e.jenis === 'in' || e.isAuto)
+
+      ? `<select class="table-select-kategori" disabled>
+          <option value="-">-</option>
+         </select>`
+
+      : `
+
+        <select
+          class="table-select-kategori"
+          onchange="updateTableKategoriKeuangan(${e.originalIndex},this.value)"
+        >
+
+          <option value="Operational"
+            ${kat === 'Operational' ? 'selected' : ''}>
+            Operational
+          </option>
+
+          <option value="BMHP"
+            ${kat === 'BMHP' ? 'selected' : ''}>
+            BMHP
+          </option>
+
+          <option value="Fee Petugas & Dokter"
+            ${kat === 'Fee Petugas & Dokter' ? 'selected' : ''}>
+            Fee Petugas & Dokter
+          </option>
+
+          <option value="Sewa Alat"
+            ${kat === 'Sewa Alat' ? 'selected' : ''}>
+            Sewa Alat
+          </option>
+
+        </select>
+
+      `;
+
+
+    let autoLabel =
+      e.isAuto
+      ? `<br><span style="background:#E8F5E9;color:#007a3d;padding:2px 6px;border-radius:4px;font-size:11px;">
+          Otomatis Penagihan
+         </span>`
+      : '';
+
+
+    listK.innerHTML += `
+
+      <tr>
+
+        <td>
+          ${formatTanggalIndo(e.tgl)}
+        </td>
+
+        <td>
+          <strong>
+            ${e.jenis === 'in'
+              ? 'Pemasukan'
+              : 'Pengeluaran'}
+          </strong>
+        </td>
+
+        <td>
+          ${e.project || '-'}
+        </td>
+
+        <td>
+          ${selectKat}
+        </td>
+
+        <td>
+          ${e.ket || '-'}
+          ${autoLabel}
+        </td>
+
+        <td>
+          Rp ${(e.jumlah || 0).toLocaleString()}
+        </td>
+
+        <td>
+          ${buktiHTML}
+        </td>
+
+        <td>
+
+          <button
+            class="btn-del"
+            onclick="del(${e.originalIndex},'k')"
+          >
+            Hapus
+          </button>
+
+        </td>
+
+      </tr>
+
+    `;
+
+  });
 
 
   createPaginationUI(
     'paginationKeuangan',
-    filteredKeuangan.length,
+    filtered.length,
     limitKeuangan,
     pageKeuangan,
     'changeLimitKeuangan',
@@ -3704,316 +2882,188 @@ function render() {
   );
 
 
-  /* =============================
-     MCU
-     TERBARU → TERLAMA
-  ============================== */
+  /* ===============================
+     MCU TERBARU -> TERLAMA
+  ================================ */
 
   let listM =
     document.getElementById(
       'listMCU'
     );
 
-  listM.innerHTML = '';
+  listM.innerHTML =
+    '';
 
 
   let indexedMcu =
     mcu.map(
-      (item, originalIndex) => ({
+      (item,index) => ({
         ...item,
-        originalIndex
+        originalIndex:index
       })
     );
 
 
   indexedMcu.sort(
-    (a, b) =>
-      parseTanggal(b.tgl)
-      -
-      parseTanggal(a.tgl)
+    (a,b) =>
+      sortTanggalTerbaru(a,b,'tgl')
   );
 
 
-  let displayedMcu;
-
-
-  if (
+  let displayedMcu =
     limitMcu === 'all'
-  ) {
-
-    displayedMcu =
-      indexedMcu;
-
-  } else {
-
-    let start =
-      (
-        pageMcu - 1
-      ) *
-      limitMcu;
-
-
-    displayedMcu =
-      indexedMcu.slice(
-        start,
-        start + limitMcu
-      );
-
-  }
-
-
-  let registeredInvoices =
-    tagihan.map(
-      t =>
-        `${t.nama} (${t.lokasi || '-'})`
-    );
-
-
-  displayedMcu.forEach(
-    e => {
-
-      let identifier =
-        `${e.perusahaan} (${e.lokasi || '-'})`;
-
-
-      let isLocked =
-        registeredInvoices.includes(
-          identifier
+      ? indexedMcu
+      : indexedMcu.slice(
+          (pageMcu - 1) * limitMcu,
+          pageMcu * limitMcu
         );
 
 
-      let itemsString =
-        e.items &&
-        e.items.length > 0
-        ? e.items.join(', ')
-        : '-';
+  let registeredInvoices =
+    tagihan.map(t =>
+      `${t.nama} (${t.lokasi || '-'})`
+    );
 
 
-      let hargaPerPasien =
-        e.harga || 0;
+  displayedMcu.forEach(e => {
+
+    let identifier =
+      `${e.perusahaan} (${e.lokasi || '-'})`;
 
 
-      let jmlPasien =
-        e.jumlah || 0;
+    let locked =
+      registeredInvoices.includes(identifier);
 
 
-      let nominalRab =
-        e.rab || 0;
-
-
-      let nominalFee =
-        e.fee || 0;
-
-
-      let totalHarga =
-        e.customTotal !== undefined
+    let total =
+      e.customTotal !== undefined
         ? e.customTotal
-        : (
-            hargaPerPasien *
-            jmlPasien
-          );
+        : (e.harga || 0) *
+          (e.jumlah || 0);
 
 
-      let labelEdited =
-        e.customTotal !== undefined
-        ? `
-          <span
-            style="
-              font-size:10px;
-              color:orange;
-              font-weight:normal;
-            ">
+    listM.innerHTML += `
 
-            (Disesuaikan)
+      <tr>
 
-          </span>
-        `
-        : '';
+        <td>
+          ${e.perusahaan}
+        </td>
 
+        <td>
+          ${e.lokasi || '-'}
+        </td>
 
-      let isiKet =
-        e.keterangan
-        ? e.keterangan
-        : `
-          <span
-            style="
-              color:#aaa;
-              font-style:italic;
-            ">
+        <td>
+          ${formatTanggalIndo(e.tgl)}
+        </td>
 
-            Tidak ada keterangan
+        <td>
 
-          </span>
-        `;
+          ${e.items
+            ? e.items.join(', ')
+            : '-'}
 
+          <br>
 
-      let textTombolKet =
-        e.keterangan
-        ? 'Ubah Ket.'
-        : '+ Tambahkan Keterangan';
+          <button
+            class="btn-ket"
+            style="background:#00A651"
+            onclick="editItemMcu(${e.originalIndex})"
+          >
+            Edit Item
+          </button>
 
+        </td>
 
-      listM.innerHTML += `
+        <td>
+          Rp ${(e.harga || 0).toLocaleString()}
+        </td>
 
-        <tr>
+        <td>
+          ${e.jumlah || 0}
+        </td>
 
-          <td>
-            ${e.perusahaan}
-          </td>
+        <td>
 
-          <td>
-            ${e.lokasi || '-'}
-          </td>
+          Rp ${(e.rab || 0).toLocaleString()}
 
-          <td>
-            ${formatTanggal(e.tgl)}
-          </td>
+          <br>
 
-          <td>
+          <button
+            class="btn-ket"
+            style="background:#FF9800"
+            onclick="editRabMcu(${e.originalIndex})"
+          >
+            Edit RAB
+          </button>
 
-            <div>
-              ${itemsString}
-            </div>
+        </td>
 
-            <button
-              class="btn-ket"
-              style="background:#00A651;"
-              onclick="
-                editItemMcu(
-                  ${e.originalIndex}
-                )
-              ">
+        <td>
 
-              Edit Item
+          Rp ${(e.fee || 0).toLocaleString()}
 
-            </button>
+          <br>
 
-          </td>
+          <button
+            class="btn-ket"
+            style="background:#9c27b0"
+            onclick="editFeeMcu(${e.originalIndex})"
+          >
+            Edit Fee
+          </button>
 
-          <td>
-            Rp ${hargaPerPasien.toLocaleString()}
-          </td>
+        </td>
 
-          <td>
-            ${jmlPasien}
-          </td>
+        <td>
 
-          <td>
+          <strong>
+            Rp ${total.toLocaleString()}
+          </strong>
 
-            <div>
-              Rp ${nominalRab.toLocaleString()}
-            </div>
+        </td>
 
-            <button
-              class="btn-ket"
-              style="background:#FF9800;"
-              onclick="
-                editRabMcu(
-                  ${e.originalIndex}
-                )
-              ">
+        <td>
 
-              Edit RAB
+          ${e.keterangan || '-'}
 
-            </button>
+          <br>
 
-          </td>
+          <button
+            class="btn-ket"
+            onclick="updateKeteranganMcu(${e.originalIndex})"
+          >
+            ${e.keterangan ? 'Ubah' : '+ Catatan'}
+          </button>
 
-          <td>
+        </td>
 
-            <div>
-              Rp ${nominalFee.toLocaleString()}
-            </div>
+        <td>
 
-            <button
-              class="btn-ket"
-              style="background:#9c27b0;"
-              onclick="
-                editFeeMcu(
-                  ${e.originalIndex}
-                )
-              ">
+          <button
+            class="btn-edit"
+            ${locked ? 'disabled' : ''}
+            onclick="editTotalMcu(${e.originalIndex})"
+          >
+            Edit Total
+          </button>
 
-              Edit Fee
+          <button
+            class="btn-del"
+            ${locked ? 'disabled' : ''}
+            onclick="del(${e.originalIndex},'m')"
+          >
+            Hapus
+          </button>
 
-            </button>
+        </td>
 
-          </td>
+      </tr>
 
-          <td>
+    `;
 
-            <strong>
-              Rp ${totalHarga.toLocaleString()}
-            </strong>
-
-            ${labelEdited}
-
-          </td>
-
-          <td>
-
-            <div>
-              ${isiKet}
-            </div>
-
-            <button
-              class="btn-ket"
-              onclick="
-                updateKeteranganMcu(
-                  ${e.originalIndex}
-                )
-              ">
-
-              ${textTombolKet}
-
-            </button>
-
-          </td>
-
-          <td>
-
-            <button
-              class="btn-edit"
-              ${isLocked
-                ? 'disabled title="Sudah terbit Invoice di Tab 2"'
-                : ''
-              }
-              onclick="
-                editTotalMcu(
-                  ${e.originalIndex}
-                )
-              ">
-
-              Edit Total
-
-            </button>
-
-            <button
-              class="btn-del"
-              ${isLocked
-                ? 'disabled title="Sudah terbit Invoice di Tab 2"'
-                : ''
-              }
-              onclick="
-                del(
-                  ${e.originalIndex},
-                  'm'
-                )
-              ">
-
-              Hapus
-
-            </button>
-
-          </td>
-
-        </tr>
-
-      `;
-
-    }
-
-  );
+  });
 
 
   createPaginationUI(
@@ -4026,17 +3076,17 @@ function render() {
   );
 
 
-  /* =============================
-     TAGIHAN
-     TERBARU → TERLAMA
-  ============================== */
+  /* ===============================
+     TAGIHAN TERBARU -> TERLAMA
+  ================================ */
 
   let listT =
     document.getElementById(
       'listTagihan'
     );
 
-  listT.innerHTML = '';
+  listT.innerHTML =
+    '';
 
 
   let totalPiutang =
@@ -4045,484 +3095,287 @@ function render() {
 
   let indexedTagihan =
     tagihan.map(
-      (item, originalIndex) => ({
+      (item,index) => ({
         ...item,
-        originalIndex
+        originalIndex:index
       })
     );
 
 
   indexedTagihan.sort(
-    (a, b) =>
-      parseTanggal(b.tglKirim)
-      -
-      parseTanggal(a.tglKirim)
+    (a,b) =>
+      sortTanggalTerbaru(a,b,'tglKirim')
   );
 
 
-  indexedTagihan.forEach(
-    e => {
+  indexedTagihan.forEach(e => {
 
-      let sisaPelunasanVal =
+    if (e.status !== 'Lunas') {
+
+      totalPiutang +=
         e.sisaPelunasan !== undefined
-        ? e.sisaPelunasan
-        : e.totalHarga;
-
-
-      if (
-        e.status !== 'Lunas'
-      ) {
-
-        totalPiutang +=
-          sisaPelunasanVal;
-
-      }
+          ? e.sisaPelunasan
+          : e.totalHarga;
 
     }
-  );
+
+  });
 
 
-  let displayedTagihan;
-
-
-  if (
+  let displayedTagihan =
     limitTagihan === 'all'
-  ) {
-
-    displayedTagihan =
-      indexedTagihan;
-
-  } else {
-
-    let start =
-      (
-        pageTagihan - 1
-      ) *
-      limitTagihan;
-
-
-    displayedTagihan =
-      indexedTagihan.slice(
-        start,
-        start + limitTagihan
-      );
-
-  }
-
-
-  displayedTagihan.forEach(
-    e => {
-
-
-      let tglJatuhTempoStr =
-        "-";
-
-
-      if (
-        e.tglKirim
-      ) {
-
-        let tglKirimDate =
-          new Date(
-            e.tglKirim
-          );
-
-
-        tglKirimDate.setDate(
-          tglKirimDate.getDate()
-          +
-          parseInt(
-            e.durasi
-          )
+      ? indexedTagihan
+      : indexedTagihan.slice(
+          (pageTagihan - 1) * limitTagihan,
+          pageTagihan * limitTagihan
         );
 
 
-        let yyyy =
-          tglKirimDate.getFullYear();
+  displayedTagihan.forEach(e => {
 
+    let jatuhTempo =
+      '-';
 
-        let mm =
-          String(
-            tglKirimDate.getMonth()
-            + 1
-          ).padStart(
-            2,
-            '0'
-          );
 
+    if (e.tglKirim) {
 
-        let dd =
-          String(
-            tglKirimDate.getDate()
-          ).padStart(
-            2,
-            '0'
-          );
+      let d =
+        new Date(e.tglKirim);
 
+      d.setDate(
+        d.getDate() +
+        parseInt(e.durasi || 0)
+      );
 
-        tglJatuhTempoStr =
-          `${dd}-${mm}-${yyyy}`;
 
-      }
-
-
-      let lampiranHTML =
-        "";
-
-
-      if (
-        e.source ||
-        e.lampiran
-      ) {
-
-        let src =
-          e.source ||
-          e.lampiran;
-
-
-        lampiranHTML = `
-
-          <br>
-
-          <a
-            href="${src}"
-            target="_blank"
-            class="btn-view">
-
-            Lihat Soft Invoice
-
-          </a>
-
-          <br>
-
-          <button
-            class="btn-remove-file"
-            onclick="
-              removeSoftInvoiceTable(
-                ${e.originalIndex}
-              )
-            ">
-
-            Hapus File
-
-          </button>
-
-        `;
-
-      } else {
-
-        lampiranHTML = `
-
-          <span
-            style="
-              font-size:11px;
-              color:#999;
-              display:block;
-            ">
-
-            Belum ada file
-
-          </span>
-
-          <input
-            type="file"
-            class="file-upload-table"
-            accept="image/*,application/pdf"
-            onchange="
-              uploadSoftInvoiceTable(
-                ${e.originalIndex},
-                this
-              )
-            ">
-
-        `;
-
-      }
-
-
-      let buktiKirimHTML =
-        "";
-
-
-      if (
-        e.buktiKirim
-      ) {
-
-        buktiKirimHTML = `
-
-          <br>
-
-          <a
-            href="${e.buktiKirim}"
-            target="_blank"
-            class="btn-view-bukti">
-
-            Lihat Bukti Kirim
-
-          </a>
-
-          <br>
-
-          <button
-            class="btn-remove-file"
-            onclick="
-              removeBuktiKirimTable(
-                ${e.originalIndex}
-              )
-            ">
-
-            Hapus File
-
-          </button>
-
-        `;
-
-      } else {
-
-        buktiKirimHTML = `
-
-          <span
-            style="
-              font-size:11px;
-              color:#999;
-              display:block;
-            ">
-
-            Belum kirim file
-
-          </span>
-
-          <input
-            type="file"
-            class="file-upload-table"
-            accept="image/*,application/pdf"
-            onchange="
-              uploadBuktiKirimTable(
-                ${e.originalIndex},
-                this
-              )
-            ">
-
-        `;
-
-      }
-
-
-      let statusClass =
-        'belum';
-
-
-      if (
-        e.status === 'Lunas'
-      ) {
-
-        statusClass =
-          'lunas';
-
-      }
-
-
-      if (
-        e.status === 'Down Payment'
-      ) {
-
-        statusClass =
-          'dp-status';
-
-      }
-
-
-      let selectStatusHTML = `
-
-        <select
-          onchange="
-            updateStatus(
-              ${e.originalIndex},
-              this.value
-            )
-          "
-          class="
-            select-status
-            ${statusClass}
-          ">
-
-          <option
-            value="Belum Lunas"
-            ${e.status === 'Belum Lunas'
-              ? 'selected'
-              : ''
-            }>
-
-            Belum Lunas
-
-          </option>
-
-          <option
-            value="Down Payment"
-            ${e.status === 'Down Payment'
-              ? 'selected'
-              : ''
-            }>
-
-            Down Payment
-
-          </option>
-
-          <option
-            value="Lunas"
-            ${e.status === 'Lunas'
-              ? 'selected'
-              : ''
-            }>
-
-            Lunas
-
-          </option>
-
-        </select>
-
-      `;
-
-
-      let sisaPelunasan =
-        e.sisaPelunasan !== undefined
-        ? e.sisaPelunasan
-        : e.totalHarga;
-
-
-      if (
-        e.status === 'Lunas'
-      ) {
-
-        sisaPelunasan =
-          0;
-
-      }
-
-
-      let dpLabel =
-        e.status === 'Down Payment'
-        ? `
-
-          <br>
-
-          <span
-            style="
-              font-size:11px;
-              color:#FF9800;
-            ">
-
-            DP:
-            Rp ${(e.dpNominal || 0).toLocaleString()}
-
-          </span>
-
-        `
-        : '';
-
-
-      listT.innerHTML += `
-
-        <tr>
-
-          <td>
-
-            <strong>
-              ${e.nama}
-            </strong>
-
-            <br>
-
-            <span
-              style="
-                font-size:11px;
-                color:#666;
-              ">
-
-              Project:
-              ${e.lokasi || '-'}
-
-            </span>
-
-          </td>
-
-          <td>
-
-            <strong>
-              ${e.noInvoice || '-'}
-            </strong>
-
-            ${lampiranHTML}
-
-          </td>
-
-          <td>
-
-            ${formatTanggal(e.tglKirim)}
-
-            ${buktiKirimHTML}
-
-          </td>
-
-          <td>
-            ${e.durasi} Hari
-          </td>
-
-          <td>
-
-            <strong>
-              Rp ${(e.totalHarga || 0).toLocaleString()}
-            </strong>
-
-            ${dpLabel}
-
-          </td>
-
-          <td>
-
-            <strong
-              style="
-                color:#d32f2f;
-              ">
-
-              Rp ${sisaPelunasan.toLocaleString()}
-
-            </strong>
-
-          </td>
-
-          <td>
-            ${tglJatuhTempoStr}
-          </td>
-
-          <td>
-            ${selectStatusHTML}
-          </td>
-
-          <td>
-
-            <button
-              class="btn-del"
-              onclick="
-                del(
-                  ${e.originalIndex},
-                  't'
-                )
-              ">
-
-              Hapus
-
-            </button>
-
-          </td>
-
-        </tr>
-
-      `;
+      jatuhTempo =
+        `${String(d.getDate()).padStart(2,'0')}-
+         ${String(d.getMonth()+1).padStart(2,'0')}-
+         ${d.getFullYear()}`;
 
     }
 
-  );
+
+    let srcInv =
+      e.source ||
+      e.lampiran;
+
+
+    let invoiceHTML =
+      srcInv
+
+      ? `
+
+        <a
+          href="${srcInv}"
+          target="_blank"
+          class="btn-view"
+        >
+          Lihat Invoice
+        </a>
+
+        <br>
+
+        <button
+          class="btn-remove-file"
+          onclick="removeSoftInvoiceTable(${e.originalIndex})"
+        >
+          Hapus
+        </button>
+
+      `
+
+      : `
+
+        <input
+          type="file"
+          class="file-upload-table"
+          accept="image/*,application/pdf"
+          onchange="uploadSoftInvoiceTable(${e.originalIndex},this)"
+        >
+
+      `;
+
+
+    let buktiHTML =
+      e.buktiKirim
+
+      ? `
+
+        <a
+          href="${e.buktiKirim}"
+          target="_blank"
+          class="btn-view-bukti"
+        >
+          Lihat Bukti
+        </a>
+
+        <br>
+
+        <button
+          class="btn-remove-file"
+          onclick="removeBuktiKirimTable(${e.originalIndex})"
+        >
+          Hapus
+        </button>
+
+      `
+
+      : `
+
+        <input
+          type="file"
+          class="file-upload-table"
+          accept="image/*,application/pdf"
+          onchange="uploadBuktiKirimTable(${e.originalIndex},this)"
+        >
+
+      `;
+
+
+    let sisa =
+      e.status === 'Lunas'
+        ? 0
+        : (
+            e.sisaPelunasan !== undefined
+              ? e.sisaPelunasan
+              : e.totalHarga
+          );
+
+
+    let dpLabel =
+      e.status === 'Down Payment'
+
+      ? `<br>
+         <span style="font-size:11px;color:#FF9800;">
+           DP: Rp ${(e.dpNominal || 0).toLocaleString()}
+         </span>`
+
+      : '';
+
+
+    let statusClass =
+      e.status === 'Lunas'
+        ? 'lunas'
+        : e.status === 'Down Payment'
+          ? 'dp-status'
+          : 'belum';
+
+
+    listT.innerHTML += `
+
+      <tr>
+
+        <td>
+
+          <strong>
+            ${e.nama}
+          </strong>
+
+          <br>
+
+          <span style="font-size:11px;color:#666;">
+            Project: ${e.lokasi || '-'}
+          </span>
+
+        </td>
+
+        <td>
+
+          <strong>
+            ${e.noInvoice || '-'}
+          </strong>
+
+          <br>
+
+          ${invoiceHTML}
+
+        </td>
+
+        <td>
+
+          ${formatTanggalIndo(e.tglKirim)}
+
+          <br>
+
+          ${buktiHTML}
+
+        </td>
+
+        <td>
+          ${e.durasi || 0} Hari
+        </td>
+
+        <td>
+
+          <strong>
+            Rp ${(e.totalHarga || 0).toLocaleString()}
+          </strong>
+
+          ${dpLabel}
+
+        </td>
+
+        <td>
+
+          <strong style="color:#d32f2f;">
+            Rp ${sisa.toLocaleString()}
+          </strong>
+
+        </td>
+
+        <td>
+          ${jatuhTempo}
+        </td>
+
+        <td>
+
+          <select
+            onchange="updateStatus(${e.originalIndex},this.value)"
+            class="select-status ${statusClass}"
+          >
+
+            <option
+              value="Belum Lunas"
+              ${e.status === 'Belum Lunas' ? 'selected' : ''}
+            >
+              Belum Lunas
+            </option>
+
+            <option
+              value="Down Payment"
+              ${e.status === 'Down Payment' ? 'selected' : ''}
+            >
+              Down Payment
+            </option>
+
+            <option
+              value="Lunas"
+              ${e.status === 'Lunas' ? 'selected' : ''}
+            >
+              Lunas
+            </option>
+
+          </select>
+
+        </td>
+
+        <td>
+
+          <button
+            class="btn-del"
+            onclick="del(${e.originalIndex},'t')"
+          >
+            Hapus
+          </button>
+
+        </td>
+
+      </tr>
+
+    `;
+
+  });
 
 
   createPaginationUI(
@@ -4535,74 +3388,60 @@ function render() {
   );
 
 
-  document.getElementById(
-    'totalIn'
-  ).innerText =
-    'Rp ' +
-    totalIn.toLocaleString();
+  document.getElementById('totalIn').innerText =
+    'Rp ' + totalIn.toLocaleString();
 
 
-  document.getElementById(
-    'totalOut'
-  ).innerText =
-    'Rp ' +
-    totalOut.toLocaleString();
+  document.getElementById('totalOut').innerText =
+    'Rp ' + totalOut.toLocaleString();
 
 
-  document.getElementById(
-    'totalPiutang'
-  ).innerText =
-    'Rp ' +
-    totalPiutang.toLocaleString();
-
-}
+  document.getElementById('totalPiutang').innerText =
+    'Rp ' + totalPiutang.toLocaleString();
 
 
-/* ===============================
-   UPDATE KATEGORI
-================================ */
+  if (
+    document.getElementById('pengeluaran-project')
+      .style.display !== 'none'
+  ) {
 
-function updateTableKategoriKeuangan(
-  index,
-  value
-) {
+    renderPengeluaranProject();
 
-  keuangan[index]
-    .jenisPengeluaran =
-    value;
-
-  saveAndSync();
-
-}
-
-/* ===============================
-   HELPER TANGGAL
-================================ */
-
-// Fungsi untuk konversi ke format DD-MM-YYYY (Waktu Indonesia)
-function formatTanggal(tanggal) {
-  if (!tanggal) return "-";
-  
-  // Jika berisi waktu (ISO), ambil hanya bagian tanggal & sesuaikan zona waktu
-  const date = new Date(tanggal);
-  // Ambil tanggal dalam zona waktu lokal (Indonesia)
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
-  
-  return `${dd}-${mm}-${yyyy}`;
-}
-
-function parseTanggal(tanggal) {
-  if (!tanggal) {
-    return 0;
   }
-  return new Date(tanggal).getTime() || 0;
+
+
+  if (
+    document.getElementById('laporan-bulanan')
+      .style.display !== 'none'
+  ) {
+
+    renderLaporanBulanan();
+
+  }
+
+}
+
+function formatTanggalIndo(tgl) {
+  if (!tgl) return "-";
+  let d = new Date(tgl);
+  
+  // Cek apakah tanggal valid
+  if (isNaN(d.getTime())) return tgl; 
+  
+  // Membentuk format dd-MM-yyyy secara manual
+  let day = String(d.getDate()).padStart(2, '0');
+  let month = String(d.getMonth() + 1).padStart(2, '0');
+  let year = d.getFullYear();
+  
+  return `${day}-${month}-${year}`;
 }
 
 /* ===============================
-   START
+   MULAI APLIKASI
 ================================ */
+
+document.getElementById('dbSwitcher').value = currentDb;
+document.getElementById('logoNama').innerText = DB_LABELS[currentDb];
 
 loadDataFromSpreadsheet();
 
